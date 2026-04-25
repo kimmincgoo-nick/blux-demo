@@ -2698,25 +2698,25 @@ function triggerAgent(type, customText) {
         </div>`);
     }, 4600);
 
-    // Output 2 (t=7600ms, holds 2s): insights bullet list
+    // Output 2 (t=5600ms, holds 1s): insights bullet list
     setTimeout(() => {
       appendBlock(answerMsg, `<ul class="insight-list" style="margin: 0;">
         <li><strong>최근 30일 이내 구매</strong>: 1,084명 (아직 재구매 유도 시점 아님)</li>
         <li><strong>31~180일 구간</strong>: <span class="highlight-yellow">2,508명 ⭐ 재구매 유도 최적 타깃</span></li>
         <li><strong>180일 초과</strong>: 689명 (휴면 복귀 캠페인이 더 적합)</li>
       </ul>`);
-    }, 7600);
+    }, 5600);
 
-    // Output 3 (t=9600ms, holds 2s): audience suggestion + offer
+    // Output 3 (t=6600ms, holds 2s): audience suggestion + offer
     setTimeout(() => {
       appendBlock(answerMsg, `<div>
           <strong>💡 재구매 유도 오디언스 제안</strong><br>
           <span style="font-size:13px;">"이전에 구매 이력이 있으나 최근 30일간 재구매가 없는 고객"을 타깃으로 제안합니다. 이 구간은 구매 경험이 남아 있어 재구매 전환율이 가장 높습니다.</span>
         </div>
         <div style="margin-top: 8px; color: var(--text-dim); font-size: 12px;">확인해주시면 오디언스를 생성한 뒤, 재구매 유도 캠페인 초안까지 이어서 만들어드릴 수 있습니다.</div>`);
-    }, 9600);
+    }, 6600);
 
-    // Output 4 (t=11600ms, holds 3s): chips message (separate bubble)
+    // Output 4 (t=8600ms, holds 3s): chips message (separate bubble)
     setTimeout(() => {
       addMsg(`<div style="font-weight: 600; margin-bottom: 6px; font-size: 13px;">다른 기준으로 오디언스를 만들까요?</div>
         <div class="suggestion-chips">
@@ -2726,12 +2726,12 @@ function triggerAgent(type, customText) {
           <button class="chip">↪ 휴면 복귀(180일 초과)로 변경</button>
         </div>
       `);
-    }, 11600);
+    }, 8600);
 
-    // Step 2 spotlight (t=14600ms, after chips have been visible for 3s)
+    // Step 2 spotlight (t=11600ms, after chips have been visible for 3s)
     setTimeout(() => {
       if (currentTour === tours['agent-campaign'] && currentStep === 0) nextStep();
-    }, 14600);
+    }, 11600);
   }
   else if (type === 'report') {
     addMsg('지난 30일간 주기성 캠페인 성과 정리해줘', 'user');
