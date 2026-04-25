@@ -2537,6 +2537,15 @@ function goTo(sceneName) {
   if (navMatch) navMatch.classList.add('active');
   // Scroll top
   document.getElementById('main').scrollTop = 0;
+  // Clear stale tour highlight when scene changes — the current step's target
+  // may not be valid in the new scene, and scroll events during the transition
+  // could otherwise re-show the previous step's spotlight.
+  if (repositionActive) {
+    document.getElementById('spotlight').classList.remove('visible');
+    document.getElementById('coach').style.display = 'none';
+    document.querySelectorAll('.tour-emphasis').forEach(el => el.classList.remove('tour-emphasis'));
+    repositionActive = null;
+  }
 }
 
 document.querySelectorAll('[data-scene]').forEach(nav => {
@@ -2902,18 +2911,12 @@ function agentStep2() {
 
 // Step 3 click: "오디언스 보기" — chat slides right, audience scene revealed in center, then campaign chips
 function viewAudience() {
-  goTo('audience');
+  goTo('audience');           // also clears stale tour spotlight
   dockChatToSide();
 
-  // Step 4 (캠페인 생성 칩 강조) fires 2.5s later — gives time for slide + scene reveal
-  if (currentTour === tours['agent-campaign'] && currentStep === 2) {
-    setTimeout(() => {
-      if (currentTour === tours['agent-campaign'] && currentStep === 2) nextStep();
-    }, 2500);
-  }
-
-  // Continue chat: campaign creation chips
-  setTimeout(() => addThinking(), 600);
+  // Silent observation window: ~3s for user to absorb the actual audience scene
+  // before the chat resumes. Then thinking → chips → Step 4 spotlight.
+  setTimeout(() => addThinking(), 3000);
   setTimeout(() => {
     removeThinking();
     addMsg(`<div class="thinking-bar">Thinking... ✓</div>
@@ -2927,7 +2930,14 @@ function viewAudience() {
         <button class="chip">↪ 이번엔 여기까지</button>
       </div>
     `);
-  }, 2200);
+  }, 3700);
+
+  // Step 4 (캠페인 생성 칩 강조) fires after silent observation + chip reveal
+  if (currentTour === tours['agent-campaign'] && currentStep === 2) {
+    setTimeout(() => {
+      if (currentTour === tours['agent-campaign'] && currentStep === 2) nextStep();
+    }, 4200);
+  }
 }
 
 // Step 4 click: "카카오 브랜드메시지 캠페인 생성"
