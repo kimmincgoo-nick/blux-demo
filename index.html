@@ -1527,10 +1527,11 @@
     inset: 0;
     background: rgba(17, 20, 32, 0.55);
     backdrop-filter: blur(6px);
-    display: grid;
+    display: none;          /* hidden by default — demo auto-starts Tour 1 instead */
     place-items: center;
-    z-index: 500;
+    z-index: 600;           /* above coach (500) when shown */
   }
+  .welcome-bd.open { display: grid; }
   .welcome-card {
     background: var(--surface);
     border-radius: 16px;
@@ -1633,7 +1634,7 @@
     padding: 16px 18px;
     width: 320px;
     box-shadow: var(--shadow-lg);
-    z-index: 100;
+    z-index: 500;  /* Above modal-backdrop (400) so coach stays visible during modal steps */
     font-size: 14px;
     line-height: 1.5;
     display: none;
@@ -2715,6 +2716,7 @@
     <div class="coach-progress" id="coach-progress"></div>
     <div class="coach-nav">
       <button class="coach-btn" onclick="exitTour()">종료</button>
+      <button class="coach-btn primary" id="coach-next" onclick="nextStep()" style="display:none;">다음 →</button>
     </div>
   </div>
 </div>
@@ -3344,6 +3346,7 @@ function resetCoachContent() {
       <div class="coach-progress" id="coach-progress"></div>
       <div class="coach-nav">
         <button class="coach-btn" onclick="exitTour()">종료</button>
+        <button class="coach-btn primary" id="coach-next" onclick="nextStep()" style="display:none;">다음 →</button>
       </div>
     </div>
   `;
@@ -3354,7 +3357,7 @@ function resetCoachContent() {
   coach.style.width = '';
 }
 
-function showCelebrationCoach({icon, title, body}) {
+function showCelebrationCoach({icon, title, body, nextTour, nextLabel}) {
   document.getElementById('spotlight').classList.remove('visible');
   document.querySelectorAll('.tour-emphasis, .tour-current').forEach(el => {
     el.classList.remove('tour-emphasis', 'tour-current');
@@ -3364,12 +3367,22 @@ function showCelebrationCoach({icon, title, body}) {
   const coach = document.getElementById('coach');
   coach.classList.remove('right', 'bottom');
   coach.style.width = '320px';
+
+  const primaryBtn = nextTour
+    ? `<button class="coach-btn primary" style="width: 100%;" onclick="startTour('${nextTour}')">다음 투어 ${nextLabel} →</button>`
+    : `<button class="coach-btn primary" style="width: 100%;" onclick="exitTour()">자유롭게 둘러보기</button>`;
+
+  const exitLink = nextTour
+    ? `<button onclick="exitTour()" style="background:transparent; border:none; color:var(--text-dim); font-size:12px; margin-top:10px; cursor:pointer; font-family:inherit; padding:6px;">여기서 마치기</button>`
+    : '';
+
   coach.innerHTML = `
     <div style="text-align:center; padding: 6px 4px;">
       <div style="font-size: 32px; margin-bottom: 10px;">${icon}</div>
       <div style="font-weight: 700; font-size: 16px; margin-bottom: 8px;">${title}</div>
       <div style="color: var(--text-dim); font-size: 13px; line-height: 1.65; margin-bottom: 18px;">${body}</div>
-      <button class="coach-btn primary" style="width: 100%;" onclick="exitTour()">자유롭게 둘러보기</button>
+      ${primaryBtn}
+      ${exitLink}
     </div>
   `;
   coach.style.display = 'block';
@@ -3381,7 +3394,9 @@ function completeAgentCampaignTour() {
   showCelebrationCoach({
     icon: '✨',
     title: 'CRM 캠페인 하나, 뚝딱.',
-    body: '오디언스 → 캠페인 → 활성화까지<br><strong style="color: var(--text);">한 번의 대화</strong>로 끝났어요.<br>반복 작업은 AI Agent가 대신합니다.'
+    body: '오디언스 → 캠페인 → 활성화까지<br><strong style="color: var(--text);">한 번의 대화</strong>로 끝났어요.<br>반복 작업은 AI Agent가 대신합니다.',
+    nextTour: 'agent-report',
+    nextLabel: '② AI 성과 리포트'
   });
 }
 
@@ -3389,7 +3404,9 @@ function completeAgentReportTour() {
   showCelebrationCoach({
     icon: '📊',
     title: '주간 리포트, 한 줄로 끝.',
-    body: 'KPI · 차트 · 인사이트 · Next Action까지<br><strong style="color: var(--text);">자연어 한 문장</strong>으로<br>Agent가 다 뽑아냈어요.'
+    body: 'KPI · 차트 · 인사이트 · Next Action까지<br><strong style="color: var(--text);">자연어 한 문장</strong>으로<br>Agent가 다 뽑아냈어요.',
+    nextTour: 'manual-campaign',
+    nextLabel: '③ 직접 세팅'
   });
 }
 
@@ -3397,7 +3414,9 @@ function completeManualCampaignTour() {
   showCelebrationCoach({
     icon: '⚙️',
     title: '직접 세팅도 한 번의 클릭으로.',
-    body: '오디언스 · 채널 · 메시지 · 변수까지<br><strong style="color: var(--text);">세밀한 컨트롤</strong> 후<br>"활성화 하기" 한 번이면 발송 시작.'
+    body: '오디언스 · 채널 · 메시지 · 변수까지<br><strong style="color: var(--text);">세밀한 컨트롤</strong> 후<br>"활성화 하기" 한 번이면 발송 시작.',
+    nextTour: 'personalization',
+    nextLabel: '④ 초개인화'
   });
 }
 
@@ -3405,7 +3424,9 @@ function completePersonalizationTour() {
   showCelebrationCoach({
     icon: '🎯',
     title: '초개인화, 자동으로 주입.',
-    body: 'AI 예측으로 타깃을 정밀하게 자르고<br><strong style="color: var(--text);">상품 추천</strong>으로 1:1 메시지.<br>한 캠페인에 모든 게 들어갑니다.'
+    body: 'AI 예측으로 타깃을 정밀하게 자르고<br><strong style="color: var(--text);">상품 추천</strong>으로 1:1 메시지.<br>한 캠페인에 모든 게 들어갑니다.',
+    nextTour: 'scenario',
+    nextLabel: '⑤ 시나리오'
   });
 }
 
@@ -3413,7 +3434,8 @@ function completeScenarioTour() {
   showCelebrationCoach({
     icon: '🔁',
     title: '한 번 설정, 평생 자동화.',
-    body: '트리거 → 딜레이 → 분기 → 메시지.<br><strong style="color: var(--text);">유저 여정</strong>대로 자동 실행.<br>마케터는 더 이상 매일 발송 안 돌립니다.'
+    body: '트리거 → 딜레이 → 분기 → 메시지.<br><strong style="color: var(--text);">유저 여정</strong>대로 자동 실행.<br>마케터는 더 이상 매일 발송 안 돌립니다.<br><br>전체 데모를 모두 마쳤어요!'
+    // No nextTour — final tour
   });
 }
 
@@ -3500,7 +3522,7 @@ const tours = {
         title: '오디언스 선택',
         body: 'AI 오디언스, 룰 세그먼트, 커스텀 세그먼트 — 원하는 방식으로 타깃을 자유롭게 지정합니다.',
         position: 'right',
-        autoAdvanceAfter: 4500
+        showNext: true
       },
       {
         scene: 'campaign',
@@ -3508,7 +3530,7 @@ const tours = {
         title: 'AI 발송 대상 최적화',
         body: '체크 한 번으로 구매 가능성이 희박한 유저를 자동 제외해 ROAS를 높여요. (최대 20% 제외)',
         position: 'right',
-        autoAdvanceAfter: 4500
+        showNext: true
       },
       {
         scene: 'campaign',
@@ -3516,7 +3538,7 @@ const tours = {
         title: '7개 채널 자유 선택',
         body: '카카오 브랜드메시지 · 알림톡 · 문자 · RCS · 앱푸시 · 이메일 · 웹훅 — 한 캠페인에서 채널만 바꿔 가며 시도 가능.',
         position: 'right',
-        autoAdvanceAfter: 4500
+        showNext: true
       },
       {
         scene: 'campaign',
@@ -3524,7 +3546,7 @@ const tours = {
         title: '개인화 변수 + 실시간 미리보기',
         body: '본문에 {{name}}, {{latest_purchase_item.name}} 같은 변수를 넣어 각 유저에게 다른 메시지. 우측에서 즉시 미리보기.',
         position: 'left',
-        autoAdvanceAfter: 5000
+        showNext: true
       },
       {
         scene: 'campaign',
@@ -3544,7 +3566,7 @@ const tours = {
         title: '4가지 AI 예측 유형',
         body: '구매 유도 · 방문 유도 · 브랜드/카테고리 홍보 — 목적에 맞는 AI 예측 기준을 선택합니다.',
         position: 'right',
-        autoAdvanceAfter: 4500
+        showNext: true
       },
       {
         scene: 'audience',
@@ -3552,16 +3574,16 @@ const tours = {
         title: 'AI 예측 결과를 드래그로 선택',
         body: 'AI가 예측한 행동 가능성 점수 분포에서 원하는 구간만 드래그로 선택. 구간 내 유저 수·평균 행동이 실시간 계산됩니다.',
         position: 'left',
-        autoAdvanceAfter: 5000
+        showNext: true
       },
       {
         scene: 'campaign',
         target: '#field-message',
         title: '메시지에 상품 추천 연결',
-        body: '메시지에 상품 추천을 연결하면 각 유저에게 서로 다른 상품이 자동으로 주입됩니다. 곧 추천 설정 모달이 열려요.',
+        body: '메시지에 상품 추천을 연결하면 각 유저에게 서로 다른 상품이 자동으로 주입됩니다. "다음"을 누르면 추천 설정 모달이 열려요.',
         position: 'right',
-        autoAdvanceAfter: 4500,
-        action: () => setTimeout(openRecModal, 3500)
+        showNext: true,
+        action: () => setTimeout(openRecModal, 1200)
       },
       {
         scene: 'campaign',
@@ -3582,7 +3604,7 @@ const tours = {
         title: '트리거: 유저 행동 기반',
         body: '장바구니 담기, 주문, 가입 등 유저 행동이 발생하면 시나리오가 자동으로 시작됩니다.',
         position: 'right',
-        autoAdvanceAfter: 4000
+        showNext: true
       },
       {
         scene: 'scenario',
@@ -3590,7 +3612,7 @@ const tours = {
         title: '딜레이 노드',
         body: '이벤트 후 원하는 시간만큼 대기. 1분, 1시간, 3일, 7일 자유롭게 설정.',
         position: 'right',
-        autoAdvanceAfter: 4000
+        showNext: true
       },
       {
         scene: 'scenario',
@@ -3598,7 +3620,7 @@ const tours = {
         title: '분기 노드',
         body: '구매 여부, 오픈 여부 등에 따라 Yes/No로 분기. 전환된 유저와 미전환 유저를 분리 관리.',
         position: 'right',
-        autoAdvanceAfter: 4000
+        showNext: true
       },
       {
         scene: 'scenario',
@@ -3606,7 +3628,7 @@ const tours = {
         title: '메시지 노드 + AI 상품 추천',
         body: '각 분기마다 다른 메시지 + AI 상품 추천 연결. 진정한 자동화의 시작.',
         position: 'left',
-        autoAdvanceAfter: 4500
+        showNext: true
       },
       {
         scene: 'scenario',
@@ -3726,6 +3748,10 @@ function showStep() {
     document.getElementById('coach-title').textContent = step.title;
     document.getElementById('coach-body').textContent = step.body;
     document.getElementById('coach-progress').textContent = `${currentStep + 1} / ${currentTour.steps.length}`;
+
+    // Show "다음 →" button for informational steps that don't have a natural target click
+    const nextBtn = document.getElementById('coach-next');
+    if (nextBtn) nextBtn.style.display = step.showNext ? '' : 'none';
 
     // Informational steps auto-advance after a fixed read window (no user click required)
     if (step.autoAdvanceAfter) {
@@ -3872,6 +3898,10 @@ document.addEventListener('keydown', e => {
     if (e.key === 'Escape') exitTour();
   }
 });
+
+/* Auto-start the demo tour on initial page load. The tour chain runs Tour 1 → 2 → 3 → 4 → 5;
+   the user can break out at any time via 종료 (or "여기서 마치기" in the celebration). */
+startTour('agent-campaign');
 </script>
 </body>
 </html>
