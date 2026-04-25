@@ -466,6 +466,11 @@
   .msg {
     font-size: 14px;
     line-height: 1.6;
+    animation: msgIn 0.35s ease-out;
+  }
+  @keyframes msgIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
   }
   .msg.user {
     align-self: flex-end;
@@ -2632,16 +2637,18 @@ function triggerAgent(type, customText) {
 
   if (type === 'campaign') {
     addMsg('재구매 유도에 적합한 오디언스를 뽑아줘', 'user');
-    setTimeout(() => addThinking(), 350);
+    setTimeout(() => addThinking(), 300);
 
+    // Phase 1: brief intermediate (1s in) — agent shows what it's doing while thinking
     setTimeout(() => {
       removeThinking();
       addMsg(`<div class="thinking-bar">Thinking... <svg width="10" height="10" style="transform: rotate(-90deg);"><use href="#i-chev"/></svg></div>
         재구매 유도 오디언스를 뽑기 위해 먼저 구매 고객의 재구매 주기 패턴을 확인해보겠습니다.
         <div class="status-line"><svg><use href="#i-check"/></svg> 데이터 분석 중...</div>`);
-      setTimeout(() => addThinking(), 250);
-    }, 1500);
+      setTimeout(() => addThinking(), 200);
+    }, 900);
 
+    // Phase 2: full answer with chart (~2s after start of trigger)
     setTimeout(() => {
       removeThinking();
       addMsg(`<div class="thinking-bar">Thinking... ✓</div>
@@ -2683,8 +2690,15 @@ function triggerAgent(type, customText) {
         </div>
 
         <div style="margin-top: 10px; color: var(--text-dim); font-size: 12px;">확인해주시면 오디언스를 생성한 뒤, 재구매 유도 캠페인 초안까지 이어서 만들어드릴 수 있습니다.</div>
+      `);
+      // Brief thinking pulse before the call-to-action chips appear
+      setTimeout(() => addThinking(), 3500);
+    }, 2000);
 
-        <div style="font-weight: 600; margin-top: 14px; margin-bottom: 6px; font-size: 13px;">다른 기준으로 오디언스를 만들까요?</div>
+    // Phase 3: chips appear after user reads the answer (~6s after trigger)
+    setTimeout(() => {
+      removeThinking();
+      addMsg(`<div style="font-weight: 600; margin-bottom: 6px; font-size: 13px;">다른 기준으로 오디언스를 만들까요?</div>
         <div class="suggestion-chips">
           <button class="chip chip-primary" onclick="agentStep2()">↪ 제안 그대로 생성</button>
           <button class="chip">↪ 60일 미구매로 더 보수적으로</button>
@@ -2695,9 +2709,9 @@ function triggerAgent(type, customText) {
       if (currentTour === tours['agent-campaign'] && currentStep === 0) {
         setTimeout(() => {
           if (currentTour === tours['agent-campaign'] && currentStep === 0) nextStep();
-        }, 900);
+        }, 500);
       }
-    }, 4200);
+    }, 6000);
   }
   else if (type === 'report') {
     addMsg('지난 30일간 주기성 캠페인 성과 정리해줘', 'user');
