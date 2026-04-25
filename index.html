@@ -2481,8 +2481,9 @@
 const scenes = ['home', 'recipe', 'analytics', 'audience', 'campaign', 'scenario'];
 
 function goTo(sceneName) {
-  document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
   const el = document.getElementById('scene-' + sceneName);
+  if (el && el.classList.contains('active')) return;
+  document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
   if (el) el.classList.add('active');
   // Update nav highlighting
   document.querySelectorAll('.nav-item, .nav-subitem').forEach(n => n.classList.remove('active'));
@@ -2508,12 +2509,19 @@ function closeWelcome() {
 /* ========== Right Chat Panel ========== */
 function openChatPanel(mode) {
   const panel = document.getElementById('chat-panel');
+  const wasFullscreen = panel.classList.contains('fullscreen');
   panel.classList.add('open');
   const onHome = document.getElementById('scene-home').classList.contains('active');
   if (mode === 'fullscreen' || (mode === undefined && onHome)) {
     panel.classList.add('fullscreen');
   } else if (mode === 'side') {
     panel.classList.remove('fullscreen');
+  }
+  // When chat takes over the home view, briefly hide any active tour spotlight
+  // so it doesn't keep pointing at home content that's now covered.
+  if (panel.classList.contains('fullscreen') && !wasFullscreen) {
+    document.getElementById('spotlight').classList.remove('visible');
+    document.getElementById('coach').style.display = 'none';
   }
 }
 function closeChatPanel() {
@@ -2647,6 +2655,11 @@ function triggerAgent(type, customText) {
           <button class="chip">↪ 휴면 복귀(180일 초과)로 변경</button>
         </div>
       `);
+      if (currentTour === tours['agent-campaign'] && currentStep === 0) {
+        setTimeout(() => {
+          if (currentTour === tours['agent-campaign'] && currentStep === 0) nextStep();
+        }, 900);
+      }
     }, 4200);
   }
   else if (type === 'report') {
@@ -2777,6 +2790,12 @@ function agentStep2() {
   goTo('audience');
   dockChatToSide();
 
+  if (currentTour === tours['agent-campaign'] && currentStep === 2) {
+    setTimeout(() => {
+      if (currentTour === tours['agent-campaign'] && currentStep === 2) nextStep();
+    }, 700);
+  }
+
   addMsg('제안 그대로 생성', 'user');
   setTimeout(() => { addThinking(); }, 400);
   setTimeout(() => {
@@ -2856,10 +2875,10 @@ function agentStep3() {
 const tours = {
   'agent-campaign': {
     steps: [
-      { scene: 'home', target: '.suggested-prompts', title: '에이전트에게 자연어로 지시', body: '"재구매 유도에 적합한 오디언스를 뽑아줘" 같은 자연어 한 문장이면 충분합니다. 제안 프롬프트를 눌러보세요.', position: 'right', action: () => triggerAgent('campaign') },
-      { scene: 'home', target: '#chat-panel', title: '실시간 분석 & 시각화', body: '에이전트가 데이터를 분석하고 차트까지 자동 생성합니다. 단순 텍스트가 아닌 근거 있는 제안을 확인하세요.', position: 'left', waitMs: 3000 },
-      { scene: 'home', target: '#chat-panel .suggestion-chips', title: '원클릭 액션', body: '제안을 그대로 실행하거나 기준을 바꿔 다시 요청할 수 있습니다. 에이전트는 후속 대화를 이어갑니다.', position: 'left', waitMs: 500 },
-      { scene: 'home', target: '#chat-panel', title: '오디언스 → 캠페인 체인', body: '오디언스 생성 → 캠페인 초안 작성 → 발송까지 하나의 대화로 이어집니다. 마케터의 반복 작업을 제거합니다.', position: 'left' }
+      { scene: 'home', target: '.suggested-prompts', title: '에이전트에게 자연어로 지시', body: '아래 4개의 프롬프트가 보여요. 자연어 한 문장이면 충분합니다. 마지막 "재구매 유도에 적합한 오디언스를 뽑아줘"를 직접 눌러보세요.', position: 'right' },
+      { scene: 'home', target: '#chat-panel .chart-card', title: '실시간 분석 & 시각화', body: '에이전트가 데이터를 분석하고 차트까지 자동 생성합니다. 단순 텍스트가 아닌 근거 있는 제안을 확인하세요.', position: 'left', waitMs: 300 },
+      { scene: 'home', target: '#chat-panel .suggestion-chips', title: '오디언스 생성으로 이어가기', body: '제안을 그대로 실행하거나 기준을 바꿔 다시 요청할 수 있어요. "↪ 제안 그대로 생성"을 누르면 오디언스가 만들어지면서 다음 단계로 넘어갑니다.', position: 'left', waitMs: 300 },
+      { scene: 'audience', target: '#chat-panel', title: '오디언스 → 캠페인 체인', body: '가운데에 오디언스 세팅 화면이 떴고, 에이전트는 우측에서 후속 대화를 이어갑니다. 캠페인 생성까지 한 흐름으로 연결됩니다.', position: 'left', waitMs: 600 }
     ]
   },
   'agent-report': {
