@@ -2650,8 +2650,11 @@ function triggerAgent(type, customText) {
   clearChat();
 
   if (type === 'campaign') {
+    const t0 = performance.now();
+    const tlog = (label) => console.log(`[campaign] ${Math.round(performance.now() - t0)}ms — ${label}`);
+    tlog('user msg added');
     addMsg('재구매 유도에 적합한 오디언스를 뽑아줘', 'user');
-    setTimeout(() => addThinking(), 300);
+    setTimeout(() => { tlog('addThinking initial'); addThinking(); }, 300);
 
     // Thinking 1 (t=600ms, holds 2s): "확인해보겠습니다"
     setTimeout(() => {
@@ -2721,6 +2724,7 @@ function triggerAgent(type, customText) {
 
     // Output 4 (t=9600ms): chips message (separate bubble) — clearly its own moment
     setTimeout(() => {
+      tlog('CHIPS message added');
       removeThinking();
       addMsg(`<div style="font-weight: 600; margin-bottom: 6px; font-size: 13px;">다른 기준으로 오디언스를 만들까요?</div>
         <div class="suggestion-chips">
@@ -2734,6 +2738,7 @@ function triggerAgent(type, customText) {
 
     // Step 2 spotlight (t=12600ms, 3s after chips have been visible)
     setTimeout(() => {
+      tlog('STEP 2 nextStep firing');
       if (currentTour === tours['agent-campaign'] && currentStep === 0) nextStep();
     }, 12600);
   }
@@ -3130,6 +3135,8 @@ function positionTourElements(step, instant) {
   const spotlight = document.getElementById('spotlight');
   const hole = document.getElementById('spotlight-hole');
 
+  console.log('[tour] positionTourElements', { instant, step: step.title, target: step.target, found: !!target, time: Math.round(performance.now()) });
+
   if (!target) {
     coach.style.display = 'none';
     spotlight.classList.remove('visible');
@@ -3180,9 +3187,10 @@ function positionTourElements(step, instant) {
   coach.style.width = coachW + 'px';
 }
 
-function onViewportChange() {
+function onViewportChange(e) {
   if (!repositionActive || rafPending) return;
   rafPending = true;
+  console.log('[viewport] scroll/resize triggered reposition, type=' + (e && e.type), 'time=' + Math.round(performance.now()));
   requestAnimationFrame(() => {
     rafPending = false;
     if (repositionActive) repositionActive(true);
