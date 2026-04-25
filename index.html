@@ -385,6 +385,45 @@
     margin-right: auto;
   }
   .chat-panel.fullscreen .msg.user { max-width: 70%; }
+
+  /* Guided tour: lock non-target prompts, emphasize target */
+  .suggested-prompts.tour-lock .prompt-chip {
+    opacity: 0.32;
+    pointer-events: none;
+    cursor: not-allowed;
+    transition: opacity 0.3s ease;
+  }
+  .suggested-prompts.tour-lock .prompt-chip[data-tour-target] {
+    opacity: 1;
+    pointer-events: auto;
+    cursor: pointer;
+    color: var(--accent);
+    font-weight: 600;
+    background: linear-gradient(135deg, rgba(61,126,255,0.10), rgba(61,126,255,0.02));
+    border: 1px solid rgba(61,126,255,0.40);
+    padding: 8px 12px;
+    border-radius: 8px;
+    animation: tour-pulse 1.6s ease-in-out infinite;
+  }
+  .suggested-prompts.tour-lock .prompt-chip[data-tour-target] svg {
+    color: var(--accent);
+  }
+  @keyframes tour-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(61,126,255,0.45); }
+    50% { box-shadow: 0 0 0 8px rgba(61,126,255,0); }
+  }
+
+  /* Recommended/CTA chip in chat */
+  .chip.chip-primary {
+    background: linear-gradient(135deg, rgba(61,126,255,0.12), rgba(61,126,255,0.04));
+    border-color: var(--accent);
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .chip.chip-primary.tour-emphasis,
+  .tour-emphasis {
+    animation: tour-pulse 1.6s ease-in-out infinite;
+  }
   .chat-header {
     padding: 14px 18px;
     border-bottom: 1px solid var(--border);
@@ -1910,7 +1949,7 @@
             <svg style="color:var(--text-dim)"><use href="#i-strategy"/></svg>
             첫구매 유저 대상 재구매 유도를 위한 캠페인 전략을 세워줘
           </button>
-          <button class="prompt-chip" onclick="triggerAgent('campaign')">
+          <button class="prompt-chip" data-tour-target onclick="triggerAgent('campaign')">
             <svg style="color:var(--text-dim)"><use href="#i-sparkle"/></svg>
             재구매 유도에 적합한 오디언스를 뽑아줘
           </button>
@@ -2050,7 +2089,7 @@
             <svg><use href="#i-save"/></svg>
             임시저장
           </button>
-          <button class="btn primary" onclick="showToast('캠페인이 활성화되었습니다')">
+          <button class="btn primary" id="campaign-activate" onclick="activateCampaign()">
             <svg><use href="#i-play"/></svg>
             활성화 하기
           </button>
@@ -2470,8 +2509,6 @@
     <div class="coach-progress" id="coach-progress"></div>
     <div class="coach-nav">
       <button class="coach-btn" onclick="exitTour()">종료</button>
-      <button class="coach-btn" id="coach-prev" onclick="prevStep()">이전</button>
-      <button class="coach-btn primary" id="coach-next" onclick="nextStep()">다음 →</button>
     </div>
   </div>
 </div>
@@ -2649,7 +2686,7 @@ function triggerAgent(type, customText) {
 
         <div style="font-weight: 600; margin-top: 14px; margin-bottom: 6px; font-size: 13px;">다른 기준으로 오디언스를 만들까요?</div>
         <div class="suggestion-chips">
-          <button class="chip" onclick="agentStep2()">↪ 제안 그대로 생성</button>
+          <button class="chip chip-primary" onclick="agentStep2()">↪ 제안 그대로 생성</button>
           <button class="chip">↪ 60일 미구매로 더 보수적으로</button>
           <button class="chip">↪ VIP 티어만 타깃</button>
           <button class="chip">↪ 휴면 복귀(180일 초과)로 변경</button>
@@ -2786,13 +2823,16 @@ function triggerAgent(type, customText) {
 
 // Second step: after agent suggests audience, user clicks "제안 그대로 생성"
 function agentStep2() {
+  // Strip CTA highlight from previous message — only the newest chip should be the "primary" one
+  document.querySelectorAll('#chat-panel .chip.chip-primary').forEach(c => c.classList.remove('chip-primary'));
+
   // Slide chat from fullscreen to side panel, reveal audience scene in center
   goTo('audience');
   dockChatToSide();
 
-  if (currentTour === tours['agent-campaign'] && currentStep === 2) {
+  if (currentTour === tours['agent-campaign'] && currentStep === 1) {
     setTimeout(() => {
-      if (currentTour === tours['agent-campaign'] && currentStep === 2) nextStep();
+      if (currentTour === tours['agent-campaign'] && currentStep === 1) nextStep();
     }, 700);
   }
 
@@ -2817,7 +2857,7 @@ function agentStep2() {
 
       <div style="font-weight: 600; margin-top: 14px; margin-bottom: 6px; font-size: 13px;">다음 단계를 진행할까요?</div>
       <div class="suggestion-chips">
-        <button class="chip" onclick="agentStep3()">↪ 카카오 브랜드메시지 캠페인 생성</button>
+        <button class="chip chip-primary" onclick="agentStep3()">↪ 카카오 브랜드메시지 캠페인 생성</button>
         <button class="chip">↪ 앱푸시 캠페인 생성</button>
         <button class="chip">↪ SMS 캠페인 생성</button>
         <button class="chip">↪ 이번엔 여기까지</button>
@@ -2827,8 +2867,16 @@ function agentStep2() {
 }
 
 function agentStep3() {
+  document.querySelectorAll('#chat-panel .chip.chip-primary').forEach(c => c.classList.remove('chip-primary'));
+
   goTo('campaign');
   dockChatToSide();
+
+  if (currentTour === tours['agent-campaign'] && currentStep === 2) {
+    setTimeout(() => {
+      if (currentTour === tours['agent-campaign'] && currentStep === 2) nextStep();
+    }, 700);
+  }
 
   addMsg('카카오 브랜드메시지 캠페인 생성', 'user');
   setTimeout(() => { addThinking(); }, 400);
@@ -2871,14 +2919,74 @@ function agentStep3() {
   }, 1800);
 }
 
+/* ========== Campaign Activation ========== */
+function activateCampaign() {
+  showToast('🎉 캠페인이 활성화되었습니다 · 발송이 시작됩니다');
+  if (currentTour === tours['agent-campaign']) {
+    setTimeout(completeAgentCampaignTour, 600);
+  }
+}
+
+function completeAgentCampaignTour() {
+  document.getElementById('spotlight').classList.remove('visible');
+  document.querySelectorAll('.tour-emphasis').forEach(el => el.classList.remove('tour-emphasis'));
+  repositionActive = null;
+
+  const coach = document.getElementById('coach');
+  coach.classList.remove('right', 'bottom');
+  coach.style.width = '320px';
+  coach.innerHTML = `
+    <div style="text-align:center; padding: 6px 4px;">
+      <div style="font-size: 32px; margin-bottom: 10px;">✨</div>
+      <div style="font-weight: 700; font-size: 16px; margin-bottom: 8px;">CRM 캠페인 하나, 뚝딱.</div>
+      <div style="color: var(--text-dim); font-size: 13px; line-height: 1.65; margin-bottom: 18px;">
+        오디언스 → 캠페인 → 활성화까지<br>
+        <strong style="color: var(--text);">한 번의 대화</strong>로 끝났어요.<br>
+        반복 작업은 AI Agent가 대신합니다.
+      </div>
+      <button class="coach-btn primary" style="width: 100%;" onclick="exitTour()">자유롭게 둘러보기</button>
+    </div>
+  `;
+  coach.style.display = 'block';
+  coach.style.left = (window.innerWidth / 2 - 160) + 'px';
+  coach.style.top = (window.innerHeight / 2 - 130) + 'px';
+}
+
 /* ========== Guided Tours ========== */
 const tours = {
   'agent-campaign': {
     steps: [
-      { scene: 'home', target: '.suggested-prompts', title: '에이전트에게 자연어로 지시', body: '아래 4개의 프롬프트가 보여요. 자연어 한 문장이면 충분합니다. 마지막 "재구매 유도에 적합한 오디언스를 뽑아줘"를 직접 눌러보세요.', position: 'right' },
-      { scene: 'home', target: '#chat-panel .chart-card', title: '실시간 분석 & 시각화', body: '에이전트가 데이터를 분석하고 차트까지 자동 생성합니다. 단순 텍스트가 아닌 근거 있는 제안을 확인하세요.', position: 'left', waitMs: 300 },
-      { scene: 'home', target: '#chat-panel .suggestion-chips', title: '오디언스 생성으로 이어가기', body: '제안을 그대로 실행하거나 기준을 바꿔 다시 요청할 수 있어요. "↪ 제안 그대로 생성"을 누르면 오디언스가 만들어지면서 다음 단계로 넘어갑니다.', position: 'left', waitMs: 300 },
-      { scene: 'audience', target: '#chat-panel', title: '오디언스 → 캠페인 체인', body: '가운데에 오디언스 세팅 화면이 떴고, 에이전트는 우측에서 후속 대화를 이어갑니다. 캠페인 생성까지 한 흐름으로 연결됩니다.', position: 'left', waitMs: 600 }
+      {
+        scene: 'home',
+        target: '.suggested-prompts',
+        title: '에이전트에게 자연어로 지시',
+        body: '자연어 한 문장이면 충분합니다. 강조된 "재구매 유도에 적합한 오디언스를 뽑아줘"를 직접 눌러주세요.',
+        position: 'right'
+      },
+      {
+        scene: 'home',
+        target: '#chat-panel .chip.chip-primary',
+        title: '오디언스 생성',
+        body: '에이전트가 차트로 분석을 마치고 재구매 유도 최적 타깃을 제안했어요. "↪ 제안 그대로 생성"을 누르면 오디언스가 만들어집니다.',
+        position: 'left',
+        waitMs: 300
+      },
+      {
+        scene: 'audience',
+        target: '#chat-panel .chip.chip-primary',
+        title: '캠페인 생성으로 이어가기',
+        body: '오디언스가 생성됐어요. 가운데에는 실제 오디언스 세팅 화면이 떴습니다. 이어서 "↪ 카카오 브랜드메시지 캠페인 생성"을 눌러 캠페인까지 만들어볼까요?',
+        position: 'left',
+        waitMs: 1500
+      },
+      {
+        scene: 'campaign',
+        target: '#campaign-activate',
+        title: '검수하고 활성화 하기',
+        body: '캠페인이 자동 작성됐어요. 이름·발송대상·메시지까지 검수만 하고 "활성화 하기"를 누르면 발송이 시작됩니다.',
+        position: 'left',
+        waitMs: 1500
+      }
     ]
   },
   'agent-report': {
@@ -2929,6 +3037,15 @@ function startTour(tourKey) {
   document.querySelectorAll('.tour-btn').forEach(b => b.classList.remove('active'));
   const btn = document.querySelector(`.tour-btn[data-tour="${tourKey}"]`);
   if (btn) btn.classList.add('active');
+
+  // Reset state for agent-campaign tour so user starts at clean home
+  if (tourKey === 'agent-campaign') {
+    closeChatPanel();
+    clearChat();
+    goTo('home');
+    document.querySelector('.suggested-prompts')?.classList.add('tour-lock');
+  }
+
   showStep();
 }
 document.querySelectorAll('.tour-btn[data-tour]').forEach(btn => {
@@ -2943,17 +3060,29 @@ function showStep() {
   goTo(step.scene);
   if (step.action) step.action();
 
+  // Once we move past step 0 of agent-campaign, prompts can stay unlocked
+  // (they're covered by chat anyway, but keeps state clean if user navigates back)
+  if (currentTour === tours['agent-campaign'] && currentStep > 0) {
+    document.querySelector('.suggested-prompts')?.classList.remove('tour-lock');
+  }
+
+  // Clear previous emphasis
+  document.querySelectorAll('.tour-emphasis').forEach(el => el.classList.remove('tour-emphasis'));
+
   const waitMs = step.waitMs || 350;
   setTimeout(() => {
     repositionActive = (instant) => positionTourElements(step, instant);
     repositionActive(false);
 
+    if (step.emphasize) {
+      const em = document.querySelector(step.emphasize);
+      if (em) em.classList.add('tour-emphasis');
+    }
+
     document.getElementById('coach-step').textContent = `STEP ${currentStep + 1} / ${currentTour.steps.length}`;
     document.getElementById('coach-title').textContent = step.title;
     document.getElementById('coach-body').textContent = step.body;
     document.getElementById('coach-progress').textContent = `${currentStep + 1} / ${currentTour.steps.length}`;
-    document.getElementById('coach-prev').style.visibility = currentStep === 0 ? 'hidden' : 'visible';
-    document.getElementById('coach-next').textContent = currentStep === currentTour.steps.length - 1 ? '완료 ✓' : '다음 →';
   }, waitMs);
 }
 
@@ -3038,6 +3167,8 @@ function exitTour() {
   document.getElementById('coach').style.display = 'none';
   document.getElementById('spotlight').classList.remove('visible');
   document.querySelectorAll('.tour-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.suggested-prompts')?.classList.remove('tour-lock');
+  document.querySelectorAll('.tour-emphasis').forEach(el => el.classList.remove('tour-emphasis'));
   showToast('투어 완료 · 자유롭게 탐색해보세요');
 }
 
