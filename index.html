@@ -2653,11 +2653,8 @@ function triggerAgent(type, customText) {
   clearChat();
 
   if (type === 'campaign') {
-    const t0 = performance.now();
-    const tlog = (label) => console.log(`[campaign] ${Math.round(performance.now() - t0)}ms — ${label}`);
-    tlog('user msg added');
     addMsg('재구매 유도에 적합한 오디언스를 뽑아줘', 'user');
-    setTimeout(() => { tlog('addThinking initial'); addThinking(); }, 300);
+    setTimeout(() => addThinking(), 300);
 
     // Thinking 1 (t=600ms, holds 2s): "확인해보겠습니다"
     setTimeout(() => {
@@ -2725,9 +2722,8 @@ function triggerAgent(type, customText) {
     // Bridge thinking (t=8600ms, 1s): signals "preparing next prompt" so chips don't appear silently
     setTimeout(() => addThinking(), 8600);
 
-    // Output 4 (t=9600ms): chips message (separate bubble) — clearly its own moment
+    // Output 4 (t=9600ms): chips message (separate bubble)
     setTimeout(() => {
-      tlog('CHIPS message added');
       removeThinking();
       addMsg(`<div style="font-weight: 600; margin-bottom: 6px; font-size: 13px;">다른 기준으로 오디언스를 만들까요?</div>
         <div class="suggestion-chips">
@@ -2739,11 +2735,10 @@ function triggerAgent(type, customText) {
       `);
     }, 9600);
 
-    // Step 2 spotlight (t=12600ms, 3s after chips have been visible)
+    // Step 2 spotlight (t=11100ms, 1.5s after chips have been visible)
     setTimeout(() => {
-      tlog('STEP 2 nextStep firing');
       if (currentTour === tours['agent-campaign'] && currentStep === 0) nextStep();
-    }, 12600);
+    }, 11100);
   }
   else if (type === 'report') {
     addMsg('지난 30일간 주기성 캠페인 성과 정리해줘', 'user');
@@ -3138,8 +3133,6 @@ function positionTourElements(step, instant) {
   const spotlight = document.getElementById('spotlight');
   const hole = document.getElementById('spotlight-hole');
 
-  console.log('[tour] positionTourElements', { instant, step: step.title, target: step.target, found: !!target, time: Math.round(performance.now()) });
-
   if (!target) {
     coach.style.display = 'none';
     spotlight.classList.remove('visible');
@@ -3190,10 +3183,9 @@ function positionTourElements(step, instant) {
   coach.style.width = coachW + 'px';
 }
 
-function onViewportChange(e) {
+function onViewportChange() {
   if (!repositionActive || rafPending) return;
   rafPending = true;
-  console.log('[viewport] scroll/resize triggered reposition, type=' + (e && e.type), 'time=' + Math.round(performance.now()));
   requestAnimationFrame(() => {
     rafPending = false;
     if (repositionActive) repositionActive(true);
