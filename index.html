@@ -2568,6 +2568,9 @@ function openChatPanel(mode) {
   if (panel.classList.contains('fullscreen') && !wasFullscreen) {
     document.getElementById('spotlight').classList.remove('visible');
     document.getElementById('coach').style.display = 'none';
+    // Clear repositionActive so scroll events during chat reveal don't re-show the
+    // step-1 spotlight pointing at the now-covered prompts area.
+    repositionActive = null;
   }
 }
 function closeChatPanel() {
