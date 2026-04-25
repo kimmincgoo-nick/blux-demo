@@ -957,6 +957,96 @@
   .stats-table td:first-child { color: var(--text-dim); }
   .stats-table td:last-child { text-align: right; font-weight: 600; }
 
+  /* Rule segment — filter pills */
+  .filter-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    background: var(--bg-soft);
+    padding: 14px 16px;
+    border-radius: 10px;
+  }
+  .filter-pill {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--text-2);
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .filter-pill .pill-icon { width: 12px; height: 12px; color: var(--text-dim); }
+  .filter-pill .pill-add { font-size: 13px; color: var(--text-dim); margin-left: 2px; }
+  .filter-connector { color: var(--text-dim); font-size: 13px; padding: 0 2px; }
+  .filter-row-actions { margin-left: auto; display: flex; gap: 4px; }
+  .filter-action-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    padding: 6px 10px;
+    border-radius: 6px;
+    color: var(--text-dim);
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .filter-action-btn:hover { background: var(--surface); border-color: var(--border); }
+
+  /* Rule segment — target user confirmation */
+  .target-result {
+    background: var(--bg-soft);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-top: 6px;
+  }
+  .target-result-meta {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+  .target-result-meta .meta-divider { color: var(--border-strong); }
+  .target-section { margin-top: 18px; }
+  .target-section:first-of-type { margin-top: 0; }
+  .target-section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .target-section-title .info-icon { font-size: 11px; color: var(--text-dim); }
+  .target-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    padding: 5px 0;
+    color: var(--text-2);
+  }
+  .target-row .value { font-weight: 600; color: var(--text); }
+  .target-channel {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    font-size: 13px;
+    padding: 6px 0;
+    color: var(--text-2);
+    align-items: start;
+  }
+  .target-channel .channel-name { font-weight: 500; }
+  .target-channel .channel-rows > div {
+    display: flex;
+    justify-content: space-between;
+    padding: 2px 0;
+  }
+  .target-channel .channel-rows strong { font-weight: 600; color: var(--text); }
+
   .user-count-box {
     background: var(--accent-soft);
     border-radius: var(--radius-sm);
@@ -1994,22 +2084,33 @@
       </div>
 
       <div class="panel">
-        <div style="display:flex; align-items:center; gap:10px; margin-bottom: 20px;">
+        <div class="panel-title">기본 정보 <svg class="chev"><use href="#i-chev"/></svg></div>
+
+        <div style="margin-bottom: 24px;">
+          <div class="field-label">오디언스 이름 <span class="req">*</span></div>
+          <input type="text" class="text-input" id="audience-name" value="재구매 유도 타깃 (최근 30일 미구매)" />
+          <div class="char-counter">21/100 자</div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom: 12px;">
           <div class="field-label" style="margin:0;">유형</div>
           <span style="font-size:12px; color:var(--accent); cursor:pointer;">
             <svg width="14" height="14" style="vertical-align:middle"><use href="#i-help"/></svg>
             가이드 바로가기
           </span>
         </div>
-        <div class="chip-group" style="margin-bottom:8px;">
-          <button class="chip-btn selected" id="chip-ai-audience">
+        <div class="chip-group">
+          <button class="chip-btn selected" id="chip-ai-audience" onclick="selectAudienceType('ai')">
             <svg style="color:inherit"><use href="#i-sparkle"/></svg>
             AI 오디언스
           </button>
-          <button class="chip-btn">룰 세그먼트</button>
-          <button class="chip-btn">커스텀 세그먼트</button>
+          <button class="chip-btn" id="chip-rule-segment" onclick="selectAudienceType('rule')">룰 세그먼트</button>
+          <button class="chip-btn" id="chip-custom-segment" onclick="selectAudienceType('custom')">커스텀 세그먼트</button>
         </div>
       </div>
+
+      <!-- AI variant: AI 오디언스 prediction (Tour 4) -->
+      <div class="audience-variant" data-variant="ai">
 
       <div class="panel" id="panel-ai-predict">
         <div class="panel-title">
@@ -2096,6 +2197,91 @@
 
         <div class="user-count-box">
           선택 구간 예상 모수 · <strong>9,802명</strong> (전체의 13.7%)
+        </div>
+      </div>
+
+      </div><!-- /audience-variant ai -->
+
+      <!-- Rule variant: 룰 세그먼트 (Tour 1: 30일 미구매 유저) -->
+      <div class="audience-variant" data-variant="rule" style="display:none;">
+
+      <div class="panel" id="panel-rule-filter">
+        <div class="panel-title">필터 <svg class="chev"><use href="#i-chev"/></svg></div>
+
+        <div class="filter-row">
+          <div class="filter-pill">
+            <span style="color:var(--text-dim);">@</span> 주문 <span class="pill-add">+</span>
+          </div>
+          <span class="filter-connector">를</span>
+          <div class="filter-pill">30일 전보다 과거에 (당일 포함)</div>
+          <div class="filter-pill">수행한 적</div>
+          <div class="filter-pill">없음</div>
+          <div class="filter-row-actions">
+            <button class="filter-action-btn">+ OR</button>
+            <button class="filter-action-btn">×</button>
+          </div>
+        </div>
+
+        <button class="btn" style="margin-top: 16px;">
+          <svg><use href="#i-plus"/></svg>
+          새 필터 추가
+        </button>
+      </div>
+
+      <div class="panel" id="panel-rule-target">
+        <div class="panel-title">타겟 유저 확인 <svg class="chev"><use href="#i-chev"/></svg></div>
+
+        <div class="field-label">예상 유저 수</div>
+        <button class="btn" style="margin-bottom: 14px;">
+          <svg><use href="#i-refresh"/></svg>
+          예상 모수 계산하기
+        </button>
+
+        <div class="target-result">
+          <div class="target-result-meta">
+            <span style="color: var(--success); display:flex; align-items:center; gap:4px;">
+              <svg width="11" height="11"><use href="#i-check"/></svg> 100% 완료
+            </span>
+            <span class="meta-divider">|</span>
+            <span>오차범위 (95%): ±203</span>
+          </div>
+
+          <div class="target-section">
+            <div class="target-section-title">
+              조건에 해당하는 예상 유저 수 <span class="info-icon">ⓘ</span>
+            </div>
+            <div class="target-row"><div>전체 (비회원 포함)</div><div class="value">17,183명</div></div>
+            <div class="target-row"><div>회원</div><div class="value">4,188명</div></div>
+          </div>
+
+          <div class="target-section">
+            <div class="target-section-title">
+              채널별 수신 가능 예상 유저 수 <span class="info-icon">ⓘ</span>
+            </div>
+            <div class="target-channel">
+              <div class="channel-name">카카오 브랜드 메시지</div>
+              <div class="channel-rows">
+                <div><div>마케팅 수신 동의자 (M)</div><strong>4,181명</strong></div>
+                <div><div>마케팅 수신 동의자 & 채널 비친구 (N)</div><strong>4,181명</strong></div>
+                <div><div>채널 친구 (I)</div><strong>4,181명</strong></div>
+              </div>
+            </div>
+            <div class="target-channel" style="border-top: 1px solid var(--border); margin-top: 8px; padding-top: 10px;">
+              <div class="channel-name">카카오 알림톡</div>
+              <div class="channel-rows">
+                <div><div>발송 가능 유저</div><strong>4,188명</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      </div><!-- /audience-variant rule -->
+
+      <!-- Custom variant placeholder -->
+      <div class="audience-variant" data-variant="custom" style="display:none;">
+        <div class="panel" style="text-align:center; padding: 60px 28px; color: var(--text-dim);">
+          업로드한 CSV / 데이터 소스를 기반으로 커스텀 세그먼트를 정의합니다.
         </div>
       </div>
     </section>
@@ -2607,6 +2793,27 @@ function dockChatToSide() {
   document.getElementById('chat-panel').classList.remove('fullscreen');
 }
 
+/* ========== Audience Type Switching ========== */
+function selectAudienceType(type) {
+  // Toggle chip-btn selected state
+  document.querySelectorAll('#scene-audience .chip-group .chip-btn').forEach(b => b.classList.remove('selected'));
+  const chipMap = { ai: 'chip-ai-audience', rule: 'chip-rule-segment', custom: 'chip-custom-segment' };
+  document.getElementById(chipMap[type])?.classList.add('selected');
+
+  // Show only the matching variant
+  document.querySelectorAll('#scene-audience .audience-variant').forEach(v => {
+    v.style.display = v.dataset.variant === type ? '' : 'none';
+  });
+
+  // Adjust audience name to fit the type
+  const nameInput = document.getElementById('audience-name');
+  if (nameInput && type === 'rule') {
+    nameInput.value = '재구매 유도 타깃 (최근 30일 미구매)';
+  } else if (nameInput && type === 'ai') {
+    nameInput.value = '뷰티 카테고리 관심 예측 오디언스';
+  }
+}
+
 function addMsg(html, role = 'agent') {
   const body = document.getElementById('chat-body');
   const msg = document.createElement('div');
@@ -2962,6 +3169,7 @@ function agentStep2() {
 // Step 3 click: "오디언스 보기" — chat slides right, audience scene revealed in center, then campaign chips
 function viewAudience() {
   goTo('audience');           // calls clearTourSpotlight internally on scene change
+  selectAudienceType('rule'); // show the rule segment view that matches agent's suggestion
   dockChatToSide();
 
   // Silent observation window: ~3s for user to absorb the actual audience scene
@@ -3432,6 +3640,7 @@ function startTour(tourKey) {
       closeChatPanel();
       closeRecModal();
       goTo('audience');
+      selectAudienceType('ai');  // ensure AI panels visible for prediction tour
     },
     'scenario': () => {
       closeChatPanel();
