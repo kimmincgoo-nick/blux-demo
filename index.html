@@ -2861,6 +2861,8 @@ const tours = {
 
 let currentTour = null;
 let currentStep = 0;
+let repositionActive = null;
+let rafPending = false;
 
 function startTour(tourKey) {
   closeWelcome();
@@ -2886,54 +2888,8 @@ function showStep() {
 
   const waitMs = step.waitMs || 350;
   setTimeout(() => {
-    const target = document.querySelector(step.target);
-    const coach = document.getElementById('coach');
-    const spotlight = document.getElementById('spotlight');
-    const hole = document.getElementById('spotlight-hole');
-
-    if (!target) {
-      coach.style.display = 'none';
-      spotlight.classList.remove('visible');
-    } else {
-      const rect = target.getBoundingClientRect();
-      spotlight.classList.add('visible');
-      hole.style.left = (rect.left - 6) + 'px';
-      hole.style.top = (rect.top - 6) + 'px';
-      hole.style.width = (rect.width + 12) + 'px';
-      hole.style.height = (rect.height + 12) + 'px';
-
-      coach.style.display = 'block';
-      coach.classList.remove('right', 'bottom');
-      const coachW = 320;
-      const coachH = coach.offsetHeight || 170;
-      let cx, cy;
-      const position = step.position || 'right';
-
-      if (position === 'right') {
-        cx = rect.right + 16;
-        cy = Math.max(80, rect.top);
-        if (cx + coachW > window.innerWidth - 16) {
-          cx = rect.left - coachW - 16;
-          coach.classList.add('right');
-        }
-      } else if (position === 'left') {
-        cx = rect.left - coachW - 16;
-        cy = Math.max(80, rect.top);
-        coach.classList.add('right');
-        if (cx < 16) {
-          cx = rect.right + 16;
-          coach.classList.remove('right');
-        }
-      } else {
-        cx = rect.left;
-        cy = rect.bottom + 16;
-        coach.classList.add('bottom');
-      }
-      if (cy + coachH > window.innerHeight - 16) cy = window.innerHeight - coachH - 16;
-
-      coach.style.left = cx + 'px';
-      coach.style.top = cy + 'px';
-    }
+    repositionActive = (instant) => positionTourElements(step, instant);
+    repositionActive(false);
 
     document.getElementById('coach-step').textContent = `STEP ${currentStep + 1} / ${currentTour.steps.length}`;
     document.getElementById('coach-title').textContent = step.title;
@@ -2943,6 +2899,73 @@ function showStep() {
     document.getElementById('coach-next').textContent = currentStep === currentTour.steps.length - 1 ? '완료 ✓' : '다음 →';
   }, waitMs);
 }
+
+function positionTourElements(step, instant) {
+  const target = document.querySelector(step.target);
+  const coach = document.getElementById('coach');
+  const spotlight = document.getElementById('spotlight');
+  const hole = document.getElementById('spotlight-hole');
+
+  if (!target) {
+    coach.style.display = 'none';
+    spotlight.classList.remove('visible');
+    return;
+  }
+
+  hole.style.transition = instant ? 'none' : '';
+
+  const rect = target.getBoundingClientRect();
+  spotlight.classList.add('visible');
+  hole.style.left = (rect.left - 6) + 'px';
+  hole.style.top = (rect.top - 6) + 'px';
+  hole.style.width = (rect.width + 12) + 'px';
+  hole.style.height = (rect.height + 12) + 'px';
+
+  coach.style.display = 'block';
+  coach.classList.remove('right', 'bottom');
+  const coachW = Math.min(320, window.innerWidth - 32);
+  const coachH = coach.offsetHeight || 170;
+  let cx, cy;
+  const position = step.position || 'right';
+
+  if (position === 'right') {
+    cx = rect.right + 16;
+    cy = Math.max(16, rect.top);
+    if (cx + coachW > window.innerWidth - 16) {
+      cx = rect.left - coachW - 16;
+      coach.classList.add('right');
+    }
+  } else if (position === 'left') {
+    cx = rect.left - coachW - 16;
+    cy = Math.max(16, rect.top);
+    coach.classList.add('right');
+    if (cx < 16) {
+      cx = rect.right + 16;
+      coach.classList.remove('right');
+    }
+  } else {
+    cx = rect.left;
+    cy = rect.bottom + 16;
+    coach.classList.add('bottom');
+  }
+  cx = Math.max(16, Math.min(cx, window.innerWidth - coachW - 16));
+  cy = Math.max(16, Math.min(cy, window.innerHeight - coachH - 16));
+
+  coach.style.left = cx + 'px';
+  coach.style.top = cy + 'px';
+  coach.style.width = coachW + 'px';
+}
+
+function onViewportChange() {
+  if (!repositionActive || rafPending) return;
+  rafPending = true;
+  requestAnimationFrame(() => {
+    rafPending = false;
+    if (repositionActive) repositionActive(true);
+  });
+}
+window.addEventListener('resize', onViewportChange);
+window.addEventListener('scroll', onViewportChange, true);
 function nextStep() {
   currentStep++;
   if (currentStep >= currentTour.steps.length) return exitTour();
@@ -2954,6 +2977,7 @@ function prevStep() {
 function exitTour() {
   currentTour = null;
   currentStep = 0;
+  repositionActive = null;
   document.getElementById('coach').style.display = 'none';
   document.getElementById('spotlight').classList.remove('visible');
   document.querySelectorAll('.tour-btn').forEach(b => b.classList.remove('active'));
