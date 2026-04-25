@@ -87,6 +87,22 @@
     flex-shrink: 0;
   }
   .logo-mark svg { width: 20px; height: 20px; }
+  /* Brand logo image (replaces SVG mark) */
+  .brand-logo {
+    display: block;
+    height: 26px;
+    width: auto;
+    flex-shrink: 0;
+  }
+  /* On dark backgrounds (e.g., sidebar): invert dark navy strokes to near-white */
+  .brand-logo-light {
+    filter: brightness(0) invert(1);
+    opacity: 0.95;
+  }
+  /* On light backgrounds (home greeting): keep original dark navy */
+  .brand-logo-dark {
+    /* default */
+  }
   .demo-badge {
     background: var(--accent-soft);
     color: var(--accent);
@@ -269,10 +285,12 @@
     text-align: center;
   }
   .home-logo-big {
-    width: 80px; height: 80px;
     margin: 0 auto 24px;
-    opacity: 0.7;
+    display: flex;
+    justify-content: center;
+    opacity: 0.85;
   }
+  .home-logo-big img { display: block; }
   .home-greeting {
     font-size: 26px;
     font-weight: 700;
@@ -1865,7 +1883,7 @@
 <div class="welcome-bd" id="welcome">
   <div class="welcome-card">
     <div class="welcome-logo">
-      <svg width="38" height="38"><use href="#blux-logo"/></svg>
+      <img src="blux-logo.png" alt="Blux" style="height: 32px;" />
     </div>
     <h1>Blux Interactive Demo</h1>
     <p>자율주행 CRM 마케팅이 실제로 어떻게 돌아가는지<br>5개 시나리오로 직접 체험해 보세요.</p>
@@ -1915,9 +1933,7 @@
   <!-- ========== SIDEBAR ========== -->
   <aside class="sidebar">
     <div class="sidebar-logo">
-      <div class="logo-mark">
-        <svg width="22" height="22" style="color:#fff"><use href="#blux-logo"/></svg>
-      </div>
+      <img src="blux-logo.png" alt="Blux" class="brand-logo brand-logo-light" />
       <span class="demo-badge">DEMO</span>
     </div>
 
@@ -2032,7 +2048,7 @@
     <section class="scene active" id="scene-home">
       <div class="home-container">
         <div class="home-logo-big">
-          <svg width="80" height="80" style="color: #c5c9d5"><use href="#blux-logo"/></svg>
+          <img src="blux-logo.png" alt="Blux" class="brand-logo brand-logo-dark" style="height: 56px;" />
         </div>
         <div class="home-greeting">Nick(Blux)님, 안녕하세요!</div>
         <div class="home-sub">당신의 비즈니스를 혁신할 초개인화 솔루션, Blux에 오신 걸 환영합니다.</div>
