@@ -2537,6 +2537,22 @@
 /* ========== Scene Switching ========== */
 const scenes = ['home', 'recipe', 'analytics', 'audience', 'campaign', 'scenario'];
 
+// Hides the current tour spotlight + coach and clears repositionActive so that
+// scroll events fired during the next agent reveal phase don't re-trigger the
+// previous step's positioner (which can prematurely point at newly-rendered
+// elements that happen to match the old target selector). The next showStep()
+// will set a fresh positioner for the new step.
+function clearTourSpotlight() {
+  if (repositionActive) {
+    document.getElementById('spotlight').classList.remove('visible');
+    document.getElementById('coach').style.display = 'none';
+    repositionActive = null;
+  }
+  document.querySelectorAll('.tour-emphasis, .tour-current').forEach(el => {
+    el.classList.remove('tour-emphasis', 'tour-current');
+  });
+}
+
 function goTo(sceneName) {
   const el = document.getElementById('scene-' + sceneName);
   if (el && el.classList.contains('active')) return;
@@ -2548,17 +2564,8 @@ function goTo(sceneName) {
   if (navMatch) navMatch.classList.add('active');
   // Scroll top
   document.getElementById('main').scrollTop = 0;
-  // Clear stale tour highlight when scene changes — the current step's target
-  // may not be valid in the new scene, and scroll events during the transition
-  // could otherwise re-show the previous step's spotlight.
-  if (repositionActive) {
-    document.getElementById('spotlight').classList.remove('visible');
-    document.getElementById('coach').style.display = 'none';
-    document.querySelectorAll('.tour-emphasis, .tour-current').forEach(el => {
-      el.classList.remove('tour-emphasis', 'tour-current');
-    });
-    repositionActive = null;
-  }
+  // Drop stale tour spotlight when scene actually changes
+  clearTourSpotlight();
 }
 
 document.querySelectorAll('[data-scene]').forEach(nav => {
@@ -2588,13 +2595,9 @@ function openChatPanel(mode) {
   // When chat takes over the home view, briefly hide any active tour spotlight
   // so it doesn't keep pointing at home content that's now covered.
   if (panel.classList.contains('fullscreen') && !wasFullscreen) {
-    document.getElementById('spotlight').classList.remove('visible');
-    document.getElementById('coach').style.display = 'none';
-    // Clear repositionActive so scroll events during chat reveal don't re-show the
-    // step-1 spotlight pointing at the now-covered prompts area.
-    repositionActive = null;
-    // Also clear tour-current on the now-covered prompts so prompt-chips are locked.
-    document.querySelectorAll('.tour-current').forEach(el => el.classList.remove('tour-current'));
+    // Chat covers home content — drop step 1's spotlight so scroll events during
+    // the agent reveal don't keep pointing at the now-covered prompts.
+    clearTourSpotlight();
   }
 }
 function closeChatPanel() {
@@ -2888,10 +2891,12 @@ function triggerAgent(type, customText) {
 
 // Step 2 click: "제안 그대로 생성" — stays fullscreen, shows progress, ends with "오디언스 보기" button
 function agentStep2() {
-  // Strip CTA highlight + tour-current from the just-clicked chip (prevents double-click)
-  document.querySelectorAll('#chat-panel .chip.chip-primary, .tour-current').forEach(el => {
-    el.classList.remove('chip-primary', 'tour-current');
-  });
+  // No scene change here, so goTo won't drop the previous spotlight — do it explicitly.
+  // Without this, scroll events from upcoming addMsg calls re-fire step 2's positioner
+  // (target = #chat-panel .chip.chip-primary) and could re-show the spotlight on whatever
+  // chip-primary appears next.
+  clearTourSpotlight();
+  document.querySelectorAll('#chat-panel .chip.chip-primary').forEach(c => c.classList.remove('chip-primary'));
 
   addMsg('제안 그대로 생성', 'user');
   setTimeout(() => addThinking(), 300);
@@ -2928,7 +2933,7 @@ function agentStep2() {
 
 // Step 3 click: "오디언스 보기" — chat slides right, audience scene revealed in center, then campaign chips
 function viewAudience() {
-  goTo('audience');           // also clears stale tour spotlight
+  goTo('audience');           // calls clearTourSpotlight internally on scene change
   dockChatToSide();
 
   // Silent observation window: ~3s for user to absorb the actual audience scene
@@ -2960,9 +2965,12 @@ function viewAudience() {
 // Step 4 click: "카카오 브랜드메시지 캠페인 생성" — stays in audience scene, reveals campaign
 // info progressively in chat, then ends with "캠페인 보기" CTA button.
 function agentStep3() {
-  document.querySelectorAll('#chat-panel .chip.chip-primary, .tour-current').forEach(el => {
-    el.classList.remove('chip-primary', 'tour-current');
-  });
+  // CRITICAL: clear step 4's repositionActive before adding new chip-primary later.
+  // Without this, scroll events from addMsg calls during the reveal phase re-fire
+  // step 4's positioner (target = #chat-panel .chip.chip-primary), which then matches
+  // the new view-campaign-btn (also chip-primary) and prematurely fires the spotlight.
+  clearTourSpotlight();
+  document.querySelectorAll('#chat-panel .chip.chip-primary').forEach(c => c.classList.remove('chip-primary'));
 
   // Stay in audience scene (chat already side panel from viewAudience)
   addMsg('카카오 브랜드메시지 캠페인 생성', 'user');
@@ -3032,9 +3040,7 @@ function agentStep3() {
 // Step 5 click: "캠페인 보기" — navigate to campaign scene, allow viewing,
 // then auto-close chat panel so the activate button at top-right becomes accessible.
 function viewCampaign() {
-  document.querySelectorAll('.tour-current').forEach(el => el.classList.remove('tour-current'));
-
-  goTo('campaign');
+  goTo('campaign');           // calls clearTourSpotlight internally on scene change
 
   // Silent observation window: ~3s for user to see the campaign creation form
   // before we close the chat panel and highlight the activate button.
@@ -3053,7 +3059,7 @@ function viewCampaign() {
 /* ========== Campaign Activation ========== */
 function activateCampaign() {
   // Lock the activate button so it can't fire twice during the celebration delay
-  document.querySelectorAll('.tour-current').forEach(el => el.classList.remove('tour-current'));
+  clearTourSpotlight();
   showToast('🎉 캠페인이 활성화되었습니다 · 발송이 시작됩니다');
   if (currentTour === tours['agent-campaign']) {
     setTimeout(completeAgentCampaignTour, 600);
