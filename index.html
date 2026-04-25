@@ -366,8 +366,25 @@
     flex-direction: column;
     z-index: 30;
     box-shadow: -8px 0 24px rgba(0,0,0,0.05);
+    transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.45s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .chat-panel.open { display: flex; }
+  .chat-panel.fullscreen {
+    width: calc(100vw - 240px);
+    border-left-color: transparent;
+    box-shadow: none;
+  }
+  .chat-panel.fullscreen .chat-header,
+  .chat-panel.fullscreen .chat-body,
+  .chat-panel.fullscreen .chat-input-wrap {
+    max-width: 760px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .chat-panel.fullscreen .msg.user { max-width: 70%; }
   .chat-header {
     padding: 14px 18px;
     border-bottom: 1px solid var(--border);
@@ -2489,11 +2506,21 @@ function closeWelcome() {
 }
 
 /* ========== Right Chat Panel ========== */
-function openChatPanel() {
-  document.getElementById('chat-panel').classList.add('open');
+function openChatPanel(mode) {
+  const panel = document.getElementById('chat-panel');
+  panel.classList.add('open');
+  const onHome = document.getElementById('scene-home').classList.contains('active');
+  if (mode === 'fullscreen' || (mode === undefined && onHome)) {
+    panel.classList.add('fullscreen');
+  } else if (mode === 'side') {
+    panel.classList.remove('fullscreen');
+  }
 }
 function closeChatPanel() {
-  document.getElementById('chat-panel').classList.remove('open');
+  document.getElementById('chat-panel').classList.remove('open', 'fullscreen');
+}
+function dockChatToSide() {
+  document.getElementById('chat-panel').classList.remove('fullscreen');
 }
 
 function addMsg(html, role = 'agent') {
@@ -2560,15 +2587,19 @@ function triggerAgent(type, customText) {
 
   if (type === 'campaign') {
     addMsg('재구매 유도에 적합한 오디언스를 뽑아줘', 'user');
+    setTimeout(() => addThinking(), 350);
 
     setTimeout(() => {
+      removeThinking();
       addMsg(`<div class="thinking-bar">Thinking... <svg width="10" height="10" style="transform: rotate(-90deg);"><use href="#i-chev"/></svg></div>
         재구매 유도 오디언스를 뽑기 위해 먼저 구매 고객의 재구매 주기 패턴을 확인해보겠습니다.
         <div class="status-line"><svg><use href="#i-check"/></svg> 데이터 분석 중...</div>`);
-    }, 500);
+      setTimeout(() => addThinking(), 250);
+    }, 1500);
 
     setTimeout(() => {
-      addMsg(`<div class="thinking-bar">Thinking... <svg width="10" height="10" style="transform: rotate(-90deg);"><use href="#i-chev"/></svg></div>
+      removeThinking();
+      addMsg(`<div class="thinking-bar">Thinking... ✓</div>
         구매 고객 기반 재구매 유도 타깃 세그먼트를 정의하기 위한 분석이 마무리됐습니다. 결과를 시각화해볼게요.
         <div class="status-line"><svg><use href="#i-check"/></svg> 시각화 생성 중...</div>
 
@@ -2616,7 +2647,7 @@ function triggerAgent(type, customText) {
           <button class="chip">↪ 휴면 복귀(180일 초과)로 변경</button>
         </div>
       `);
-    }, 2500);
+    }, 4200);
   }
   else if (type === 'report') {
     addMsg('지난 30일간 주기성 캠페인 성과 정리해줘', 'user');
@@ -2742,8 +2773,12 @@ function triggerAgent(type, customText) {
 
 // Second step: after agent suggests audience, user clicks "제안 그대로 생성"
 function agentStep2() {
+  // Slide chat from fullscreen to side panel, reveal audience scene in center
+  goTo('audience');
+  dockChatToSide();
+
   addMsg('제안 그대로 생성', 'user');
-  setTimeout(() => { addThinking(); }, 300);
+  setTimeout(() => { addThinking(); }, 400);
   setTimeout(() => {
     removeThinking();
     addMsg(`<div class="thinking-bar">Thinking... ✓</div>
@@ -2769,12 +2804,15 @@ function agentStep2() {
         <button class="chip">↪ 이번엔 여기까지</button>
       </div>
     `);
-  }, 1500);
+  }, 1900);
 }
 
 function agentStep3() {
+  goTo('campaign');
+  dockChatToSide();
+
   addMsg('카카오 브랜드메시지 캠페인 생성', 'user');
-  setTimeout(() => { addThinking(); }, 300);
+  setTimeout(() => { addThinking(); }, 400);
   setTimeout(() => {
     removeThinking();
     addMsg(`<div class="thinking-bar">Thinking... ✓</div>
