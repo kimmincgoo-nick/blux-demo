@@ -1747,9 +1747,31 @@
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
   ::-webkit-scrollbar-thumb:hover { background: var(--text-subtle); }
+
+  /* Floating brand mark at top-left — always visible on every scene/state */
+  .brand-corner {
+    position: fixed;
+    top: 14px;
+    left: 14px;
+    z-index: 1000;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .brand-corner img {
+    height: 22px;
+    width: auto;
+    display: block;
+  }
 </style>
 </head>
 <body>
+
+<!-- Floating Blux brand mark — always at top-left corner of viewport -->
+<div class="brand-corner">
+  <img src="blux-logo.png" alt="Blux" class="brand-logo brand-logo-light" />
+</div>
 
 <!-- BLUX SVG ICONS (reused) -->
 <svg style="display:none;">
