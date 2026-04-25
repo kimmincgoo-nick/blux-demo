@@ -413,6 +413,17 @@
     50% { box-shadow: 0 0 0 8px rgba(61,126,255,0); }
   }
 
+  /* Tour gating: while a tour is active, only the current step's target is clickable.
+     Other interactive elements (chips, primary buttons, nav) are dimmed and locked. */
+  body.tour-active .chip:not(.tour-current),
+  body.tour-active .btn.primary:not(.tour-current),
+  body.tour-active .nav-item:not(.tour-current),
+  body.tour-active .nav-subitem:not(.tour-current) {
+    pointer-events: none;
+    opacity: 0.5;
+    transition: opacity 0.25s ease;
+  }
+
   /* Recommended/CTA chip in chat */
   .chip.chip-primary {
     background: linear-gradient(135deg, rgba(61,126,255,0.12), rgba(61,126,255,0.04));
@@ -2543,7 +2554,9 @@ function goTo(sceneName) {
   if (repositionActive) {
     document.getElementById('spotlight').classList.remove('visible');
     document.getElementById('coach').style.display = 'none';
-    document.querySelectorAll('.tour-emphasis').forEach(el => el.classList.remove('tour-emphasis'));
+    document.querySelectorAll('.tour-emphasis, .tour-current').forEach(el => {
+      el.classList.remove('tour-emphasis', 'tour-current');
+    });
     repositionActive = null;
   }
 }
@@ -2580,6 +2593,8 @@ function openChatPanel(mode) {
     // Clear repositionActive so scroll events during chat reveal don't re-show the
     // step-1 spotlight pointing at the now-covered prompts area.
     repositionActive = null;
+    // Also clear tour-current on the now-covered prompts so prompt-chips are locked.
+    document.querySelectorAll('.tour-current').forEach(el => el.classList.remove('tour-current'));
   }
 }
 function closeChatPanel() {
@@ -2873,8 +2888,10 @@ function triggerAgent(type, customText) {
 
 // Step 2 click: "제안 그대로 생성" — stays fullscreen, shows progress, ends with "오디언스 보기" button
 function agentStep2() {
-  // Strip CTA highlight from previous message
-  document.querySelectorAll('#chat-panel .chip.chip-primary').forEach(c => c.classList.remove('chip-primary'));
+  // Strip CTA highlight + tour-current from the just-clicked chip (prevents double-click)
+  document.querySelectorAll('#chat-panel .chip.chip-primary, .tour-current').forEach(el => {
+    el.classList.remove('chip-primary', 'tour-current');
+  });
 
   addMsg('제안 그대로 생성', 'user');
   setTimeout(() => addThinking(), 300);
@@ -2997,6 +3014,8 @@ function agentStep3() {
 
 /* ========== Campaign Activation ========== */
 function activateCampaign() {
+  // Lock the activate button so it can't fire twice during the celebration delay
+  document.querySelectorAll('.tour-current').forEach(el => el.classList.remove('tour-current'));
   showToast('🎉 캠페인이 활성화되었습니다 · 발송이 시작됩니다');
   if (currentTour === tours['agent-campaign']) {
     setTimeout(completeAgentCampaignTour, 600);
@@ -3123,6 +3142,9 @@ function startTour(tourKey) {
   const btn = document.querySelector(`.tour-btn[data-tour="${tourKey}"]`);
   if (btn) btn.classList.add('active');
 
+  // Tour gating: lock all chat/nav buttons; only the current step target is clickable.
+  document.body.classList.add('tour-active');
+
   // Reset state for agent-campaign tour so user starts at clean home
   if (tourKey === 'agent-campaign') {
     closeChatPanel();
@@ -3151,13 +3173,20 @@ function showStep() {
     document.querySelector('.suggested-prompts')?.classList.remove('tour-lock');
   }
 
-  // Clear previous emphasis
-  document.querySelectorAll('.tour-emphasis').forEach(el => el.classList.remove('tour-emphasis'));
+  // Clear previous emphasis and current-target marker (so previously-clickable
+  // elements are re-locked while we wait for the new step to position).
+  document.querySelectorAll('.tour-emphasis, .tour-current').forEach(el => {
+    el.classList.remove('tour-emphasis', 'tour-current');
+  });
 
   const waitMs = step.waitMs || 350;
   setTimeout(() => {
     repositionActive = (instant) => positionTourElements(step, instant);
     repositionActive(false);
+
+    // Mark this step's target as the only clickable element during the step.
+    const targetEl = document.querySelector(step.target);
+    if (targetEl) targetEl.classList.add('tour-current');
 
     if (step.emphasize) {
       const em = document.querySelector(step.emphasize);
@@ -3253,7 +3282,10 @@ function exitTour() {
   document.getElementById('spotlight').classList.remove('visible');
   document.querySelectorAll('.tour-btn').forEach(b => b.classList.remove('active'));
   document.querySelector('.suggested-prompts')?.classList.remove('tour-lock');
-  document.querySelectorAll('.tour-emphasis').forEach(el => el.classList.remove('tour-emphasis'));
+  document.querySelectorAll('.tour-emphasis, .tour-current').forEach(el => {
+    el.classList.remove('tour-emphasis', 'tour-current');
+  });
+  document.body.classList.remove('tour-active');
   showToast('투어 완료 · 자유롭게 탐색해보세요');
 }
 
