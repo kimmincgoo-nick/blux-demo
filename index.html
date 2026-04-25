@@ -2716,8 +2716,12 @@ function triggerAgent(type, customText) {
         <div style="margin-top: 8px; color: var(--text-dim); font-size: 12px;">확인해주시면 오디언스를 생성한 뒤, 재구매 유도 캠페인 초안까지 이어서 만들어드릴 수 있습니다.</div>`);
     }, 6600);
 
-    // Output 4 (t=8600ms, holds 3s): chips message (separate bubble)
+    // Bridge thinking (t=8600ms, 1s): signals "preparing next prompt" so chips don't appear silently
+    setTimeout(() => addThinking(), 8600);
+
+    // Output 4 (t=9600ms): chips message (separate bubble) — clearly its own moment
     setTimeout(() => {
+      removeThinking();
       addMsg(`<div style="font-weight: 600; margin-bottom: 6px; font-size: 13px;">다른 기준으로 오디언스를 만들까요?</div>
         <div class="suggestion-chips">
           <button class="chip chip-primary" onclick="agentStep2()">↪ 제안 그대로 생성</button>
@@ -2726,12 +2730,12 @@ function triggerAgent(type, customText) {
           <button class="chip">↪ 휴면 복귀(180일 초과)로 변경</button>
         </div>
       `);
-    }, 8600);
+    }, 9600);
 
-    // Step 2 spotlight (t=11600ms, after chips have been visible for 3s)
+    // Step 2 spotlight (t=12600ms, 3s after chips have been visible)
     setTimeout(() => {
       if (currentTour === tours['agent-campaign'] && currentStep === 0) nextStep();
-    }, 11600);
+    }, 12600);
   }
   else if (type === 'report') {
     addMsg('지난 30일간 주기성 캠페인 성과 정리해줘', 'user');
