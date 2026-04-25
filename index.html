@@ -1,0 +1,3747 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1440, initial-scale=1.0" />
+<title>Blux Interactive Demo</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css">
+<style>
+/* ===========================================================
+   BLUX DESIGN TOKENS — v1.1
+   Source: Figma kxVgC6wzCTYKg6dqfMroNw
+   =========================================================== */
+:root {
+  /* Grey (12 steps) */
+  --grey-white: #FFFFFF;
+  --grey-50: #F3F4F6;
+  --grey-70: #EBEDF1;
+  --grey-100: #E0E3EB;
+  --grey-200: #D4D7DE;
+  --grey-300: #B6B8C0;
+  --grey-400: #8A8F98;
+  --grey-500: #6B7280;
+  --grey-600: #4B5563;
+  --grey-700: #374151;
+  --grey-800: #1E293B;
+  --grey-900: #111827;
+
+  /* Primary (navy, 8 steps) */
+  --primary-100: #747F8D;
+  --primary-200: #5A6676;
+  --primary-300: #4B5563;
+  --primary-400: #384352;
+  --primary-500: #2A3749;
+  --primary-600: #152439;
+  --primary-700: #0A192F;
+  --primary-800: #061428;
+
+  /* Secondary (blue, 9 steps) */
+  --secondary-50: #F2F6FF;
+  --secondary-100: #E1EEFF;
+  --secondary-200: #CEE3FF;
+  --secondary-300: #9BC6FF;
+  --secondary-400: #79B4FF;
+  --secondary-500: #5BA3FF;
+  --secondary-600: #006FFD;
+  --secondary-700: #005FD9;
+  --secondary-800: #004DAF;
+
+  /* Status */
+  --success-50: #EBFFEC;
+  --success-600: #3CBD27;
+  --success-700: #35A922;
+  --error-50: #FFEEED;
+  --error-600: #F04E43;
+  --error-700: #D53C33;
+  --warning-50: #FFF5D3;
+  --warning-600: #F8C306;
+
+  /* Background */
+  --bg-greyblue: #F7F9FB;
+  --bg-grey: #F8F8F9;
+
+  /* Icon (semantic aliases) */
+  --icon-default: var(--grey-300);   /* #B6B8C0 */
+  --icon-strong: var(--grey-500);    /* #6B7280 */
+  --icon-disabled: var(--grey-200);
+  --icon-inverse: var(--grey-white);
+
+  /* Spacing */
+  --s-3xs: 4px;
+  --s-2xs: 8px;
+  --s-xs: 12px;
+  --s-s: 16px;
+  --s-m: 20px;
+  --s-l: 24px;
+  --s-xl: 32px;
+  --s-2xl: 36px;
+  --s-3xl: 40px;
+
+  /* Padding */
+  --p-4: 4px; --p-6: 6px; --p-8: 8px; --p-10: 10px;
+  --p-12: 12px; --p-16: 16px; --p-20: 20px; --p-24: 24px;
+  --p-28: 28px; --p-32: 32px; --p-40: 40px;
+
+  /* Radius */
+  --r-xs: 4px; --r-s: 6px; --r-m: 8px; --r-l: 10px;
+  --r-xl: 12px; --r-2xl: 16px; --r-3xl: 20px;
+  --r-circle: 9999px;
+
+  /* Shadow */
+  --shadow-default: 0 1px 2px rgba(17, 20, 32, 0.04);
+  --shadow-md: 0 4px 12px rgba(17, 20, 32, 0.06);
+  --shadow-md-hover: 0 6px 20px rgba(17, 20, 32, 0.08);
+  --shadow-lg: 0 10px 28px rgba(17, 20, 32, 0.10);
+  --shadow-xl: 0 20px 48px rgba(17, 20, 32, 0.14);
+
+  /* Focus / Error form */
+  --focus-form: 0 0 0 2px rgba(0, 111, 253, 0.18);
+  --error-form: 0 0 0 2px rgba(240, 78, 67, 0.18);
+}
+
+/* Reset + base */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, sans-serif;
+  background: var(--bg-greyblue);
+  color: var(--grey-700);
+  letter-spacing: 0;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  height: 100vh;
+}
+
+/* Typography utility classes (Blux scale) */
+.t-title1 { font-size: 24px; line-height: 26px; font-weight: 600; color: var(--grey-900); letter-spacing: 0; }
+.t-title2 { font-size: 20px; line-height: 24px; font-weight: 700; color: var(--grey-900); letter-spacing: 0; }
+.t-title3 { font-size: 18px; line-height: 22px; font-weight: 600; color: var(--grey-900); letter-spacing: 0; }
+.t-body1 { font-size: 16px; line-height: 20px; font-weight: 400; color: var(--grey-700); letter-spacing: 0; }
+.t-body2 { font-size: 14px; line-height: 18px; font-weight: 400; color: var(--grey-700); letter-spacing: 0; }
+.t-body2-m { font-size: 14px; line-height: 18px; font-weight: 500; color: var(--grey-700); letter-spacing: 0; }
+.t-callout { font-size: 12px; line-height: 16px; font-weight: 400; color: var(--grey-400); letter-spacing: 0; }
+.t-callout-m { font-size: 12px; line-height: 16px; font-weight: 500; color: var(--grey-500); letter-spacing: 0; }
+
+/* ==================================================
+   GLOBAL LAYOUT
+   ================================================== */
+.admin-banner {
+  background: var(--error-50);
+  color: var(--error-700);
+  padding: 8px 24px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  border-bottom: 1px solid var(--error-50);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  position: relative;
+  z-index: 60;
+}
+.admin-banner svg { width: 14px; height: 14px; color: var(--error-600); }
+
+.app {
+  display: grid;
+  grid-template-columns: 224px 1fr;
+  height: calc(100vh - 33px);
+}
+
+/* ==================================================
+   SIDEBAR (GNB)
+   ================================================== */
+.sidebar {
+  background: var(--grey-white);
+  border-right: 1px solid var(--grey-100);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+.sidebar-brand {
+  padding: 20px 20px 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.brand-logo {
+  width: 36px; height: 36px;
+  background: var(--primary-700);
+  border-radius: var(--r-m);
+  display: grid;
+  place-items: center;
+}
+.brand-logo svg { width: 20px; height: 20px; color: var(--grey-white); }
+.demo-pill {
+  background: var(--secondary-50);
+  color: var(--secondary-700);
+  padding: 3px 8px;
+  border-radius: var(--r-xs);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin-left: auto;
+}
+
+.sidebar-nav { padding: 12px; flex: 1; }
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: var(--r-s);
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 500;
+  color: var(--grey-700);
+  margin-bottom: 2px;
+  transition: background 0.12s;
+}
+.nav-item:hover { background: var(--grey-50); }
+.nav-item.active {
+  background: var(--primary-700);
+  color: var(--grey-white);
+  font-weight: 600;
+}
+.nav-item .ic {
+  width: 18px; height: 18px;
+  color: var(--icon-default);
+  flex-shrink: 0;
+}
+.nav-item:hover .ic { color: var(--icon-strong); }
+.nav-item.active .ic { color: var(--icon-inverse); }
+
+.nav-group { margin-top: 8px; }
+.nav-group-head {
+  display: flex;
+  align-items: center;
+  padding: 9px 12px;
+  border-radius: var(--r-s);
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 500;
+  color: var(--grey-700);
+  margin-bottom: 2px;
+}
+.nav-group-head:hover { background: var(--grey-50); }
+.nav-group-head .ic { width: 18px; height: 18px; color: var(--icon-default); margin-right: 10px; flex-shrink: 0; }
+.nav-group-head .chev {
+  width: 14px; height: 14px;
+  color: var(--icon-default);
+  transition: transform 0.2s;
+  margin-left: auto;
+}
+.nav-group.closed .chev { transform: rotate(-90deg); }
+.nav-group.closed .nav-subitems { display: none; }
+.nav-subitems { padding-left: 40px; }
+.nav-subitem {
+  padding: 8px 12px;
+  border-radius: var(--r-s);
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--grey-600);
+  margin-bottom: 1px;
+  transition: background 0.12s;
+}
+.nav-subitem:hover { background: var(--grey-50); color: var(--grey-700); }
+.nav-subitem.active {
+  background: var(--primary-700);
+  color: var(--grey-white);
+  font-weight: 600;
+}
+
+.sidebar-user {
+  padding: 12px;
+  border-top: 1px solid var(--grey-100);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.user-avatar {
+  width: 32px; height: 32px;
+  background: var(--grey-100);
+  border-radius: var(--r-circle);
+  display: grid;
+  place-items: center;
+  color: var(--grey-700);
+  font-weight: 600;
+  font-size: 13px;
+}
+.user-meta .name { font-size: 13px; font-weight: 600; color: var(--grey-800); }
+.user-meta .role { font-size: 11px; color: var(--grey-400); }
+
+/* ==================================================
+   MAIN
+   ================================================== */
+.main {
+  overflow-y: auto;
+  background: var(--bg-greyblue);
+  position: relative;
+}
+.tourbar {
+  background: var(--grey-white);
+  border-bottom: 1px solid var(--grey-100);
+  padding: 10px 24px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+.tourbar .tb-label {
+  font-size: 11px;
+  color: var(--grey-400);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-right: 8px;
+}
+.tour-btn {
+  background: var(--grey-white);
+  border: 1px solid var(--grey-200);
+  color: var(--grey-700);
+  padding: 6px 12px;
+  border-radius: var(--r-circle);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+  white-space: nowrap;
+}
+.tour-btn:hover { border-color: var(--secondary-600); color: var(--secondary-600); }
+.tour-btn.active {
+  background: var(--primary-700);
+  color: var(--grey-white);
+  border-color: var(--primary-700);
+}
+.tourbar-spacer { flex: 1; }
+.guide-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--grey-500);
+  cursor: pointer;
+}
+.guide-link:hover { color: var(--secondary-600); }
+.guide-link svg { width: 14px; height: 14px; color: var(--icon-default); }
+
+.scene { display: none; padding: 32px 40px; animation: fadeIn 0.3s; max-width: 1360px; margin: 0 auto; }
+.scene.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* ==================================================
+   PAGE HEADER
+   ================================================== */
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.page-header .page-title {
+  font-size: 24px;
+  line-height: 26px;
+  font-weight: 600;
+  color: var(--grey-900);
+  flex: 1;
+}
+.page-header .guide-link {
+  font-size: 12px;
+  font-weight: 500;
+}
+.page-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+/* Status pill (for page header or anywhere) */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3xs);
+  padding: 3px 10px;
+  border-radius: var(--r-circle);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+}
+.status-pill .dot { width: 6px; height: 6px; border-radius: var(--r-circle); }
+.status-pill.active { background: var(--secondary-50); color: var(--secondary-700); }
+.status-pill.active .dot { background: var(--secondary-600); }
+.status-pill.done { background: var(--success-50); color: var(--success-700); }
+.status-pill.done .dot { background: var(--success-600); }
+.status-pill.stopped { background: var(--error-50); color: var(--error-700); }
+.status-pill.stopped .dot { background: var(--error-600); }
+.status-pill.draft { background: var(--grey-70); color: var(--grey-500); }
+.status-pill.draft .dot { background: var(--grey-400); }
+.status-pill.review { background: var(--warning-50); color: #8f6800; }
+.status-pill.review .dot { background: var(--warning-600); }
+
+/* ==================================================
+   BUTTONS (per tokens)
+   ================================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 14px;
+  border-radius: var(--r-m);
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--grey-200);
+  background: var(--grey-white);
+  color: var(--grey-700);
+  transition: all 0.12s;
+  font-family: inherit;
+  white-space: nowrap;
+}
+.btn:hover { background: var(--grey-50); }
+.btn svg { width: 14px; height: 14px; color: var(--icon-default); }
+.btn.primary {
+  background: var(--primary-700);
+  color: var(--grey-white);
+  border-color: var(--primary-700);
+}
+.btn.primary:hover { background: var(--primary-800); }
+.btn.primary svg { color: var(--icon-inverse); }
+.btn.danger {
+  background: var(--error-700);
+  color: var(--grey-white);
+  border-color: var(--error-700);
+}
+.btn.danger:hover { background: #b52a22; }
+.btn.danger svg { color: var(--icon-inverse); }
+.btn.ghost { border-color: transparent; background: transparent; }
+.btn.ghost:hover { background: var(--grey-50); }
+.btn.sm { padding: 6px 10px; font-size: 12px; line-height: 16px; }
+
+/* ==================================================
+   CARD / PANEL
+   ================================================== */
+.card {
+  background: var(--grey-white);
+  border: 1px solid var(--grey-100);
+  border-radius: var(--r-xl);
+  padding: 24px;
+}
+.card + .card { margin-top: 16px; }
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.panel-title {
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 600;
+  color: var(--grey-900);
+}
+.panel-subtitle {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--grey-400);
+  margin-top: 4px;
+}
+
+/* Field */
+.field { margin-bottom: 20px; }
+.field:last-child { margin-bottom: 0; }
+.field-label {
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 500;
+  color: var(--grey-700);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.field-label .req { color: var(--error-600); }
+.field-label .guide-link { font-size: 12px; margin-left: 4px; font-weight: 400; }
+.field-help {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--grey-400);
+  margin-top: 6px;
+}
+.field-help.err { color: var(--error-600); }
+
+.input {
+  width: 100%;
+  border: 1px solid var(--grey-200);
+  padding: 10px 16px;
+  border-radius: var(--r-s);
+  font-size: 14px;
+  line-height: 18px;
+  font-family: inherit;
+  color: var(--grey-900);
+  background: var(--grey-white);
+  transition: all 0.12s;
+}
+.input:focus { outline: none; border-color: var(--secondary-600); box-shadow: var(--focus-form); }
+.input::placeholder { color: var(--grey-300); }
+.char-counter { text-align: right; font-size: 11px; color: var(--grey-400); margin-top: 4px; }
+
+/* ==================================================
+   HOME (Dashboard + Agent entry)
+   ================================================== */
+.home-hero {
+  background: linear-gradient(180deg, var(--grey-white) 0%, var(--bg-greyblue) 100%);
+  border: 1px solid var(--grey-100);
+  border-radius: var(--r-xl);
+  padding: 40px;
+  text-align: center;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.home-hero::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 220px; height: 220px;
+  background: radial-gradient(circle, var(--secondary-100), transparent 70%);
+  opacity: 0.6;
+}
+.home-hero .logo-big {
+  width: 56px; height: 56px;
+  margin: 0 auto 16px;
+  background: var(--primary-700);
+  border-radius: var(--r-l);
+  display: grid;
+  place-items: center;
+  box-shadow: var(--shadow-md);
+}
+.home-hero .logo-big svg { width: 28px; height: 28px; color: var(--grey-white); }
+.home-hero h1 {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 700;
+  color: var(--grey-900);
+  margin-bottom: 6px;
+}
+.home-hero .sub {
+  font-size: 14px;
+  color: var(--grey-500);
+  margin-bottom: 24px;
+}
+
+.agent-input-card {
+  max-width: 680px;
+  margin: 0 auto;
+  background: var(--grey-white);
+  border: 1px solid var(--grey-100);
+  border-radius: var(--r-xl);
+  padding: 16px 20px;
+  box-shadow: var(--shadow-md);
+  text-align: left;
+  position: relative;
+  z-index: 2;
+}
+.agent-input-hint {
+  font-size: 13px;
+  color: var(--grey-500);
+  margin-bottom: 8px;
+}
+.agent-input-hint .brand { color: var(--secondary-600); font-weight: 600; }
+.agent-input-row { display: flex; align-items: center; gap: 12px; }
+.agent-input-row input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  line-height: 20px;
+  font-family: inherit;
+  padding: 8px 0;
+  color: var(--grey-900);
+  background: transparent;
+}
+.agent-input-row input::placeholder { color: var(--grey-300); }
+.send-btn {
+  width: 36px; height: 36px;
+  background: var(--primary-700);
+  color: var(--grey-white);
+  border: none;
+  border-radius: var(--r-m);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+.send-btn:hover { background: var(--primary-800); }
+.send-btn svg { width: 14px; height: 14px; color: var(--icon-inverse); }
+
+.suggested-prompts {
+  max-width: 680px;
+  margin: 16px auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.prompt-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: var(--r-s);
+  font-size: 13px;
+  font-family: inherit;
+  background: transparent;
+  border: none;
+  color: var(--grey-500);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.12s;
+}
+.prompt-chip:hover { background: var(--grey-50); color: var(--secondary-600); }
+.prompt-chip svg { width: 14px; height: 14px; color: var(--icon-default); flex-shrink: 0; }
+
+/* KPI grid */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.kpi-card {
+  background: var(--grey-white);
+  border: 1px solid var(--grey-100);
+  padding: 20px 24px;
+  border-radius: var(--r-xl);
+}
+.kpi-label {
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 500;
+  color: var(--grey-500);
+  margin-bottom: 8px;
+}
+.kpi-value {
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 700;
+  color: var(--grey-900);
+  letter-spacing: -0.01em;
+}
+.kpi-delta {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--secondary-600);
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.kpi-delta.down { color: var(--error-600); }
+.kpi-updated {
+  font-size: 11px;
+  color: var(--grey-400);
+  margin-top: 6px;
+}
+
+/* Campaign Funnel (Blux domain component) */
+.funnel-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  overflow-x: auto;
+  margin: 0 -4px;
+}
+.funnel-card {
+  flex: 1;
+  min-width: 140px;
+  padding: 16px 20px;
+  background: var(--grey-white);
+  border: 1px solid var(--grey-100);
+  border-radius: var(--r-l);
+  position: relative;
+  margin: 0 4px;
+}
+.funnel-card .funnel-label {
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 500;
+  color: var(--grey-500);
+  margin-bottom: 6px;
+}
+.funnel-card .funnel-value {
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 700;
+  color: var(--grey-900);
+}
+.funnel-card .funnel-rate {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--secondary-600);
+  margin-top: 2px;
+  font-weight: 500;
+}
+.funnel-arrow {
+  display: flex;
+  align-items: center;
+  color: var(--grey-300);
+  flex-shrink: 0;
+  padding: 0 2px;
+}
+.funnel-arrow svg { width: 16px; height: 16px; }
+
+/* ==================================================
+   TABLE
+   ================================================== */
+.tbl-wrap {
+  background: var(--grey-white);
+  border: 1px solid var(--grey-100);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+}
+.tbl-head {
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--grey-100);
+}
+.tbl { width: 100%; border-collapse: collapse; font-size: 14px; }
+.tbl th {
+  text-align: left;
+  padding: 12px 20px;
+  color: var(--grey-500);
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  background: var(--bg-greyblue);
+  border-bottom: 1px solid var(--grey-100);
+}
+.tbl td {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--grey-70);
+  color: var(--grey-700);
+  vertical-align: middle;
+}
+.tbl tbody tr:hover td { background: var(--bg-greyblue); }
+.tbl tbody tr:last-child td { border-bottom: none; }
+.tbl td .asset-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tbl td .asset-name strong { color: var(--grey-900); font-weight: 600; }
+
+.tag-ai {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: var(--r-circle);
+  font-size: 10px;
+  line-height: 14px;
+  font-weight: 600;
+  background: var(--secondary-50);
+  color: var(--secondary-700);
+}
+
+/* Filter tabs */
+.filter-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--grey-50);
+  padding: 4px;
+  border-radius: var(--r-m);
+  align-self: flex-start;
+}
+.filter-tab {
+  background: transparent;
+  border: none;
+  padding: 6px 14px;
+  border-radius: var(--r-s);
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 500;
+  color: var(--grey-500);
+  cursor: pointer;
+  font-family: inherit;
+}
+.filter-tab.active {
+  background: var(--grey-white);
+  color: var(--grey-900);
+  box-shadow: var(--shadow-default);
+}
+.filter-tab .count {
+  font-size: 11px;
+  color: var(--grey-400);
+  margin-left: 4px;
+}
+
+/* ==================================================
+   CHIP GROUP (audience type, channel select)
+   ================================================== */
+.chip-group { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip-btn {
+  background: var(--grey-white);
+  border: 1px solid var(--grey-200);
+  padding: 8px 14px;
+  border-radius: var(--r-m);
+  font-size: 13px;
+  line-height: 18px;
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--grey-700);
+  transition: all 0.12s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.chip-btn svg { width: 14px; height: 14px; color: var(--icon-default); }
+.chip-btn:hover { border-color: var(--secondary-600); color: var(--secondary-600); }
+.chip-btn:hover svg { color: var(--secondary-600); }
+.chip-btn.selected {
+  background: var(--primary-700);
+  color: var(--grey-white);
+  border-color: var(--primary-700);
+}
+.chip-btn.selected svg { color: var(--icon-inverse); }
+
+/* ==================================================
+   PATTERN B: 3-OPTION START (Audience creation)
+   ================================================== */
+.option-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.option-card {
+  background: var(--grey-white);
+  border: 1px solid var(--grey-100);
+  border-radius: var(--r-xl);
+  padding: 28px 24px;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+}
+.option-card:hover {
+  border-color: var(--secondary-600);
+  box-shadow: var(--shadow-md-hover);
+  transform: translateY(-2px);
+}
+.option-card .opt-icon {
+  width: 44px; height: 44px;
+  background: var(--secondary-50);
+  border-radius: var(--r-m);
+  display: grid;
+  place-items: center;
+  margin-bottom: 16px;
+}
+.option-card .opt-icon svg { width: 22px; height: 22px; color: var(--secondary-600); }
+.option-card .opt-title {
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 600;
+  color: var(--grey-900);
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.option-card .opt-desc {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--grey-500);
+}
+.option-card .ai-badge {
+  font-size: 10px;
+  line-height: 14px;
+  font-weight: 700;
+  color: var(--secondary-700);
+  background: var(--secondary-50);
+  padding: 1px 6px;
+  border-radius: var(--r-xs);
+}
+
+/* ==================================================
+   AI PREDICTION HISTOGRAM (Audience AI type result)
+   ================================================== */
+.predict-frame {
+  display: grid;
+  grid-template-columns: 1fr 220px;
+  gap: 32px;
+  align-items: flex-start;
+}
+.predict-chart { position: relative; }
+.predict-chart .axis-y-top {
+  position: absolute;
+  top: 4px; left: 0;
+  font-size: 11px;
+  color: var(--grey-400);
+}
+.predict-chart .axis-y-label {
+  position: absolute;
+  top: 24px; left: 0;
+  font-size: 11px;
+  color: var(--grey-400);
+}
+.histogram-canvas {
+  height: 200px;
+  position: relative;
+  padding: 0 20px 0 40px;
+}
+.histogram-canvas svg { width: 100%; height: 100%; }
+.range-tooltip {
+  position: absolute;
+  top: -26px;
+  background: var(--primary-700);
+  color: var(--grey-white);
+  padding: 4px 10px;
+  border-radius: var(--r-xs);
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+.range-tooltip::after {
+  content: '';
+  position: absolute;
+  bottom: -3px; left: 50%;
+  width: 6px; height: 6px;
+  background: var(--primary-700);
+  transform: translateX(-50%) rotate(45deg);
+}
+.range-slider {
+  position: relative;
+  height: 4px;
+  background: var(--grey-100);
+  border-radius: var(--r-circle);
+  margin: 16px 28px 4px;
+}
+.range-active {
+  position: absolute;
+  top: 0; bottom: 0;
+  background: var(--secondary-600);
+  border-radius: var(--r-circle);
+}
+.range-handle {
+  position: absolute;
+  top: 50%;
+  width: 18px; height: 18px;
+  background: var(--secondary-600);
+  border: 2px solid var(--grey-white);
+  border-radius: var(--r-circle);
+  transform: translate(-50%, -50%);
+  cursor: grab;
+  box-shadow: var(--shadow-default);
+}
+.range-handle:active { cursor: grabbing; }
+.range-x-labels {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 20px;
+  font-size: 11px;
+  color: var(--grey-400);
+  padding: 2px 0 0;
+}
+.range-x-center { text-align: center; font-size: 11px; color: var(--grey-500); margin-top: 8px; }
+
+.predict-stats { }
+.stats-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 13px;
+  line-height: 18px;
+  border-bottom: 1px solid var(--grey-70);
+}
+.stats-row:last-child { border-bottom: none; }
+.stats-row.head {
+  padding-bottom: 10px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--grey-100);
+  font-weight: 500;
+  color: var(--grey-500);
+  font-size: 12px;
+  letter-spacing: 0;
+}
+.stats-row .k { color: var(--grey-500); }
+.stats-row .v { color: var(--grey-900); font-weight: 500; }
+
+.count-banner {
+  background: var(--secondary-50);
+  border-radius: var(--r-m);
+  padding: 14px 20px;
+  text-align: center;
+  margin-top: 20px;
+  color: var(--secondary-700);
+  font-size: 13px;
+  font-weight: 500;
+}
+.count-banner strong { font-size: 16px; font-weight: 700; }
+
+/* AudienceBuilder (filter rules) */
+.builder { }
+.builder-rule {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+.rule-token {
+  background: var(--grey-50);
+  padding: 6px 10px;
+  border-radius: var(--r-s);
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.rule-token.attr {
+  background: var(--grey-white);
+  border: 1px solid var(--grey-200);
+}
+.rule-token.attr svg { width: 14px; height: 14px; color: var(--icon-strong); }
+.rule-token.attr .val { color: var(--grey-900); font-weight: 500; }
+.rule-token.plus {
+  background: var(--grey-white);
+  border: 1px dashed var(--grey-200);
+  cursor: pointer;
+  padding: 5px 8px;
+  color: var(--grey-400);
+}
+.rule-or-btn {
+  margin-left: auto;
+  background: var(--grey-50);
+  border: none;
+  padding: 6px 10px;
+  border-radius: var(--r-s);
+  font-size: 12px;
+  color: var(--grey-500);
+  cursor: pointer;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.rule-close {
+  background: transparent;
+  border: none;
+  color: var(--icon-default);
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-xs);
+}
+.rule-close:hover { background: var(--grey-50); color: var(--icon-strong); }
+.rule-and {
+  text-align: center;
+  color: var(--grey-400);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  margin: 4px 0;
+}
+.builder-add {
+  margin-top: 8px;
+  background: var(--grey-white);
+  border: 1px dashed var(--grey-200);
+  color: var(--grey-700);
+  padding: 10px 14px;
+  border-radius: var(--r-s);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.builder-add:hover { border-color: var(--secondary-600); color: var(--secondary-600); }
+.builder-add svg { width: 14px; height: 14px; }
+
+/* Target summary */
+.target-summary {
+  background: var(--bg-greyblue);
+  border-radius: var(--r-m);
+  padding: 16px 20px;
+}
+.target-row-head {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--grey-700);
+}
+.target-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 13px;
+}
+.target-row .check svg { width: 14px; height: 14px; color: var(--success-600); margin-right: 4px; vertical-align: middle; }
+.target-row .k { color: var(--grey-500); }
+.target-row .v { color: var(--grey-900); font-weight: 500; }
+
+/* ==================================================
+   CAMPAIGN CREATE (Pattern C: Form + Preview)
+   ================================================== */
+.form-preview {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+  align-items: flex-start;
+}
+.form-preview .preview-col {
+  position: sticky;
+  top: 80px;
+}
+
+/* Variable chip */
+.var-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: var(--secondary-50);
+  color: var(--secondary-700);
+  padding: 1px 8px;
+  border-radius: var(--r-circle);
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 500;
+  font-family: 'SF Mono', ui-monospace, monospace;
+}
+.var-chip::before {
+  content: '{';
+  color: var(--secondary-600);
+  font-weight: 700;
+}
+
+/* Message editor */
+.msg-editor {
+  background: var(--bg-greyblue);
+  padding: 16px 20px;
+  border-radius: var(--r-m);
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--grey-700);
+  border: 1px solid var(--grey-100);
+}
+.msg-editor .heading {
+  font-weight: 600;
+  color: var(--grey-900);
+  margin-bottom: 8px;
+}
+
+/* Phone mockup */
+.phone {
+  width: 280px;
+  background: #f5f6fa;
+  border: 10px solid var(--grey-900);
+  border-radius: 28px;
+  padding: 20px 14px;
+  margin: 0 auto;
+}
+.phone-status {
+  text-align: center;
+  font-size: 11px;
+  color: var(--grey-400);
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+.push-card {
+  background: var(--grey-white);
+  border-radius: 14px;
+  padding: 14px 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.push-app {
+  font-size: 10px;
+  line-height: 14px;
+  color: var(--grey-500);
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+.push-app .app-ic {
+  width: 14px; height: 14px;
+  background: var(--primary-700);
+  border-radius: 3px;
+}
+.push-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--grey-900);
+  margin-bottom: 4px;
+}
+.push-body {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--grey-700);
+}
+.push-body .hl { color: var(--secondary-600); font-weight: 600; }
+
+/* AI optimize box */
+.ai-optimize {
+  background: var(--bg-greyblue);
+  border-radius: var(--r-m);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+.ai-check {
+  width: 18px; height: 18px;
+  border: 1.5px solid var(--grey-200);
+  border-radius: var(--r-xs);
+  cursor: pointer;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  background: var(--grey-white);
+}
+.ai-check.on {
+  background: var(--secondary-600);
+  border-color: var(--secondary-600);
+}
+.ai-check.on svg { width: 12px; height: 12px; color: var(--grey-white); }
+.ai-optimize-info { flex: 1; }
+.ai-optimize-info .ai-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--grey-900);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.ai-optimize-info .ai-name svg { width: 14px; height: 14px; color: var(--secondary-600); }
+.ai-optimize-info .ai-desc {
+  font-size: 12px;
+  color: var(--grey-500);
+  margin-top: 2px;
+}
+
+/* Audience picker (in campaign) */
+.audience-picker {
+  background: var(--grey-white);
+  border: 1px solid var(--grey-200);
+  border-radius: var(--r-s);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.audience-picker:hover { border-color: var(--secondary-600); }
+.audience-picker svg.pick-ic { width: 16px; height: 16px; color: var(--icon-strong); }
+.audience-picker .name { flex: 1; color: var(--grey-900); font-weight: 500; }
+.audience-picker .chev { width: 14px; height: 14px; color: var(--icon-default); }
+
+/* Tag chips (in tag input) */
+.tag-input-box {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid var(--grey-200);
+  border-radius: var(--r-s);
+  padding: 6px 10px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  background: var(--grey-white);
+  align-items: center;
+}
+.tag-chip-small {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: var(--secondary-50);
+  color: var(--secondary-700);
+  padding: 3px 8px;
+  border-radius: var(--r-circle);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+}
+.tag-chip-small .x { cursor: pointer; opacity: 0.6; }
+
+/* ==================================================
+   SCENARIO CANVAS (Pattern E)
+   ================================================== */
+.scenario-canvas {
+  background:
+    radial-gradient(circle at 1px 1px, var(--grey-100) 1px, transparent 0);
+  background-size: 24px 24px;
+  background-color: var(--grey-white);
+  border: 1px solid var(--grey-100);
+  border-radius: var(--r-xl);
+  padding: 40px;
+  min-height: 680px;
+  position: relative;
+}
+.sc-node {
+  background: var(--grey-white);
+  border: 1px solid var(--grey-200);
+  border-radius: var(--r-l);
+  padding: 12px 16px;
+  width: 240px;
+  position: absolute;
+  box-shadow: var(--shadow-default);
+  transition: all 0.15s;
+}
+.sc-node:hover { box-shadow: var(--shadow-md); }
+.sc-node.start { border-color: var(--primary-700); border-left-width: 3px; }
+.sc-node.delay { border-left: 3px solid var(--success-600); }
+.sc-node.branch { border-left: 3px solid var(--secondary-600); }
+.sc-node.message { border-left: 3px solid var(--secondary-600); }
+.sc-node.exit { border-left: 3px solid var(--grey-300); }
+
+.sc-node-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--grey-900);
+}
+.sc-node-head .ic {
+  width: 18px; height: 18px;
+  border-radius: 4px;
+  display: grid;
+  place-items: center;
+}
+.sc-node.start .ic { background: var(--primary-700); color: var(--grey-white); }
+.sc-node.delay .ic { background: var(--success-50); color: var(--success-600); }
+.sc-node.branch .ic { background: var(--secondary-50); color: var(--secondary-600); }
+.sc-node.message .ic { background: var(--secondary-50); color: var(--secondary-600); }
+.sc-node.exit .ic { background: var(--grey-70); color: var(--grey-500); }
+.sc-node-head .ic svg { width: 12px; height: 12px; }
+.sc-node-close {
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  color: var(--icon-default);
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+}
+.sc-node-body {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--grey-600);
+}
+.sc-node-body strong { color: var(--grey-900); font-weight: 600; }
+
+/* Scenario performance badge */
+.sc-perf {
+  position: absolute;
+  bottom: -8px;
+  right: 8px;
+  background: var(--secondary-600);
+  color: var(--grey-white);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: var(--r-circle);
+  white-space: nowrap;
+}
+
+.sc-plus {
+  width: 22px; height: 22px;
+  background: var(--grey-white);
+  border: 1px solid var(--grey-200);
+  border-radius: var(--r-circle);
+  position: absolute;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  color: var(--icon-default);
+  font-size: 13px;
+  z-index: 2;
+}
+.sc-plus:hover { border-color: var(--secondary-600); color: var(--secondary-600); }
+
+.branch-label {
+  position: absolute;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--grey-500);
+  background: var(--grey-white);
+  padding: 2px 8px;
+  border-radius: var(--r-xs);
+  border: 1px solid var(--grey-100);
+  z-index: 2;
+}
+
+.sc-minimap {
+  position: absolute;
+  bottom: 20px; right: 20px;
+  width: 160px; height: 100px;
+  background: var(--grey-white);
+  border: 1px solid var(--grey-100);
+  border-radius: var(--r-s);
+  box-shadow: var(--shadow-default);
+  padding: 8px;
+  overflow: hidden;
+}
+.sc-minimap::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 1px 1px, var(--grey-100) 0.5px, transparent 0);
+  background-size: 8px 8px;
+}
+.sc-minimap-viewport {
+  position: absolute;
+  top: 10px; left: 10px;
+  width: 60px; height: 36px;
+  border: 1.5px solid var(--secondary-600);
+  background: rgba(0, 111, 253, 0.08);
+  border-radius: 2px;
+}
+.sc-minimap-node {
+  position: absolute;
+  background: var(--primary-700);
+  opacity: 0.6;
+  border-radius: 1px;
+}
+
+.sc-zoom {
+  position: absolute;
+  left: 20px; bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--grey-white);
+  border: 1px solid var(--grey-100);
+  border-radius: var(--r-s);
+  overflow: hidden;
+  box-shadow: var(--shadow-default);
+}
+.sc-zoom button {
+  width: 32px; height: 32px;
+  background: var(--grey-white);
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--grey-500);
+  transition: background 0.12s;
+}
+.sc-zoom button:hover { background: var(--grey-50); }
+.sc-zoom button + button { border-top: 1px solid var(--grey-100); }
+
+.sc-toolbar {
+  position: absolute;
+  top: 20px; left: 20px;
+  display: flex;
+  gap: 6px;
+  background: var(--grey-white);
+  border: 1px solid var(--grey-100);
+  border-radius: var(--r-s);
+  padding: 4px;
+  box-shadow: var(--shadow-default);
+}
+.sc-toolbar button {
+  background: transparent;
+  border: none;
+  padding: 5px 10px;
+  font-size: 12px;
+  color: var(--grey-600);
+  cursor: pointer;
+  border-radius: var(--r-xs);
+  font-family: inherit;
+}
+.sc-toolbar button:hover { background: var(--grey-50); }
+
+/* ==================================================
+   CHAT PANEL (Right slide-in)
+   ================================================== */
+.chat-panel {
+  position: fixed;
+  right: 0; top: 33px;
+  bottom: 0;
+  width: 440px;
+  background: var(--grey-white);
+  border-left: 1px solid var(--grey-100);
+  display: none;
+  flex-direction: column;
+  z-index: 40;
+  box-shadow: -4px 0 20px rgba(0,0,0,0.04);
+}
+.chat-panel.open { display: flex; }
+.chat-head {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--grey-100);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.chat-title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--grey-900);
+}
+.chat-title-row svg.chev { width: 14px; height: 14px; color: var(--icon-default); }
+.chat-meta {
+  font-size: 11px;
+  color: var(--grey-400);
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.chat-meta svg { width: 11px; height: 11px; color: var(--icon-default); }
+.chat-close {
+  background: transparent;
+  border: none;
+  color: var(--grey-400);
+  cursor: pointer;
+  width: 28px; height: 28px;
+  border-radius: var(--r-s);
+  display: grid;
+  place-items: center;
+}
+.chat-close:hover { background: var(--grey-50); color: var(--grey-700); }
+.chat-close svg { width: 14px; height: 14px; }
+
+.chat-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.msg { font-size: 14px; line-height: 1.6; }
+.msg.user {
+  align-self: flex-end;
+  background: var(--grey-50);
+  color: var(--grey-800);
+  padding: 10px 14px;
+  border-radius: var(--r-2xl);
+  border-top-right-radius: var(--r-xs);
+  max-width: 82%;
+  font-size: 13px;
+}
+.msg.agent {
+  align-self: flex-start;
+  max-width: 100%;
+  color: var(--grey-800);
+}
+.thinking-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--grey-400);
+  font-size: 12px;
+  margin-bottom: 6px;
+  cursor: pointer;
+}
+.thinking-bar svg { width: 10px; height: 10px; color: var(--icon-default); }
+.status-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--grey-400);
+  margin: 8px 0;
+}
+.status-line svg { width: 12px; height: 12px; color: var(--success-600); }
+
+.chart-card {
+  background: var(--grey-white);
+  border: 1px solid var(--grey-100);
+  border-radius: var(--r-m);
+  padding: 14px;
+  margin: 10px 0;
+}
+.chart-card-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--grey-900);
+  margin-bottom: 10px;
+  text-align: center;
+}
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 140px;
+  padding: 0 4px;
+}
+.bar {
+  flex: 1;
+  background: var(--secondary-600);
+  border-radius: 3px 3px 0 0;
+  position: relative;
+  min-height: 8px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 6px;
+  color: var(--grey-white);
+  font-size: 10px;
+  font-weight: 600;
+}
+.bar-labels {
+  display: flex;
+  gap: 6px;
+  padding: 0 4px;
+  margin-top: 6px;
+}
+.bar-label {
+  flex: 1;
+  text-align: center;
+  font-size: 10px;
+  line-height: 12px;
+  color: var(--grey-500);
+}
+
+.insight-list {
+  list-style: none;
+  margin: 8px 0;
+  font-size: 13px;
+  line-height: 18px;
+  padding-left: 0;
+}
+.insight-list li {
+  padding: 4px 0;
+  padding-left: 14px;
+  position: relative;
+}
+.insight-list li::before {
+  content: '•';
+  position: absolute;
+  left: 4px;
+  color: var(--grey-400);
+}
+.hl-yellow {
+  background: var(--warning-50);
+  padding: 1px 4px;
+  border-radius: var(--r-xs);
+  font-weight: 600;
+  color: var(--grey-900);
+}
+
+.suggestion-chips {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+}
+.chip {
+  background: var(--grey-50);
+  border: none;
+  padding: 8px 14px;
+  border-radius: var(--r-circle);
+  font-size: 12px;
+  color: var(--grey-700);
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  align-self: flex-start;
+  transition: all 0.12s;
+}
+.chip:hover { background: var(--secondary-50); color: var(--secondary-700); }
+
+.result-card {
+  background: var(--grey-white);
+  border: 1px solid var(--grey-100);
+  border-radius: var(--r-m);
+  padding: 14px 16px;
+  margin: 10px 0;
+  font-size: 13px;
+}
+.result-card-head {
+  font-weight: 600;
+  color: var(--grey-900);
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--grey-100);
+}
+.result-row {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  padding: 5px 0;
+  gap: 12px;
+  font-size: 13px;
+}
+.result-row .k { color: var(--grey-500); }
+.result-row .v { color: var(--grey-900); font-weight: 500; }
+
+.chat-input-wrap {
+  border-top: 1px solid var(--grey-100);
+  padding: 12px 16px;
+}
+.chat-input-box {
+  background: var(--bg-greyblue);
+  border: 1px solid var(--grey-100);
+  border-radius: var(--r-m);
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.chat-input-box input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  font-size: 13px;
+  outline: none;
+  font-family: inherit;
+  padding: 4px 0;
+  color: var(--grey-900);
+}
+.chat-input-box input::placeholder { color: var(--grey-300); }
+.chat-input-box button {
+  background: var(--primary-700);
+  color: var(--grey-white);
+  border: none;
+  width: 28px; height: 28px;
+  border-radius: var(--r-s);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+.chat-input-box button svg { width: 12px; height: 12px; color: var(--icon-inverse); }
+
+.thinking-dots {
+  display: inline-flex;
+  gap: 3px;
+  align-items: center;
+}
+.thinking-dots span {
+  width: 5px; height: 5px;
+  background: var(--grey-400);
+  border-radius: var(--r-circle);
+  animation: tdbounce 1.2s infinite;
+}
+.thinking-dots span:nth-child(2) { animation-delay: 0.15s; }
+.thinking-dots span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes tdbounce {
+  0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+  40% { opacity: 1; transform: scale(1); }
+}
+
+/* ==================================================
+   MODALS
+   ================================================== */
+.modal-bd {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 20, 32, 0.45);
+  backdrop-filter: blur(6.03px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 400;
+}
+.modal-bd.open { display: flex; }
+.modal {
+  background: var(--grey-white);
+  border-radius: var(--r-2xl);
+  width: 560px;
+  max-width: 92vw;
+  max-height: 86vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-xl);
+}
+.modal.wide { width: 640px; }
+.modal-head {
+  padding: 24px 28px 16px;
+  position: relative;
+}
+.modal-title {
+  font-size: 18px;
+  line-height: 22px;
+  font-weight: 600;
+  color: var(--grey-900);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.modal-title svg { width: 18px; height: 18px; color: var(--secondary-600); }
+.modal-subtitle {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--grey-500);
+}
+.modal-close {
+  position: absolute;
+  right: 20px; top: 20px;
+  background: transparent;
+  border: none;
+  color: var(--grey-400);
+  cursor: pointer;
+  width: 28px; height: 28px;
+  border-radius: var(--r-s);
+  display: grid;
+  place-items: center;
+}
+.modal-close:hover { background: var(--grey-50); color: var(--grey-700); }
+.modal-close svg { width: 14px; height: 14px; }
+.modal-body { padding: 4px 28px 20px; }
+.modal-footer {
+  padding: 14px 28px;
+  border-top: 1px solid var(--grey-100);
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* Rec type list */
+.rec-type-row {
+  border: 1px solid var(--grey-100);
+  border-radius: var(--r-m);
+  padding: 14px 16px;
+  cursor: pointer;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  transition: all 0.12s;
+  margin-bottom: 8px;
+}
+.rec-type-row:hover { border-color: var(--secondary-600); background: var(--secondary-50); }
+.rec-type-row.selected {
+  border-color: var(--secondary-600);
+  background: var(--secondary-50);
+}
+.rec-type-row .rt-ic {
+  width: 32px; height: 32px;
+  background: var(--grey-50);
+  border-radius: var(--r-s);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.rec-type-row .rt-ic svg { width: 18px; height: 18px; color: var(--icon-strong); }
+.rec-type-row.selected .rt-ic { background: var(--grey-white); }
+.rec-type-row.selected .rt-ic svg { color: var(--secondary-600); }
+.rec-type-row .rt-info strong {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--grey-900);
+  display: block;
+  margin-bottom: 2px;
+}
+.rec-type-row .rt-info small {
+  font-size: 12px;
+  color: var(--grey-500);
+}
+
+/* Delete confirm modal */
+.confirm-modal .modal-title {
+  color: var(--grey-900);
+}
+.confirm-modal .modal-body p {
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--grey-700);
+}
+.confirm-modal .modal-body p + p { margin-top: 6px; color: var(--grey-500); font-size: 13px; }
+
+/* ==================================================
+   WELCOME
+   ================================================== */
+.welcome-bd {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 20, 32, 0.55);
+  backdrop-filter: blur(6.03px);
+  display: grid;
+  place-items: center;
+  z-index: 500;
+}
+.welcome-card {
+  background: var(--grey-white);
+  border-radius: var(--r-2xl);
+  padding: 40px;
+  max-width: 560px;
+  text-align: center;
+  box-shadow: var(--shadow-xl);
+}
+.welcome-card .wl-logo {
+  width: 60px; height: 60px;
+  background: var(--primary-700);
+  border-radius: var(--r-l);
+  margin: 0 auto 20px;
+  display: grid;
+  place-items: center;
+}
+.welcome-card .wl-logo svg { width: 30px; height: 30px; color: var(--grey-white); }
+.welcome-card h1 {
+  font-size: 24px;
+  line-height: 26px;
+  font-weight: 700;
+  color: var(--grey-900);
+  margin-bottom: 10px;
+}
+.welcome-card > p {
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--grey-500);
+  margin-bottom: 24px;
+}
+.welcome-tours { display: grid; gap: 8px; margin-bottom: 20px; text-align: left; }
+.welcome-tour {
+  background: var(--grey-white);
+  border: 1px solid var(--grey-100);
+  padding: 14px 16px;
+  border-radius: var(--r-m);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: all 0.12s;
+}
+.welcome-tour:hover {
+  border-color: var(--secondary-600);
+  background: var(--secondary-50);
+  transform: translateX(2px);
+}
+.welcome-tour .num {
+  width: 28px; height: 28px;
+  background: var(--primary-700);
+  color: var(--grey-white);
+  border-radius: var(--r-circle);
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.welcome-tour .info-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--grey-900);
+  margin-bottom: 2px;
+}
+.welcome-tour .info-desc {
+  font-size: 12px;
+  color: var(--grey-500);
+}
+.welcome-close {
+  background: transparent;
+  border: 1px solid var(--grey-200);
+  color: var(--grey-600);
+  padding: 8px 18px;
+  border-radius: var(--r-s);
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.welcome-close:hover { background: var(--grey-50); }
+
+/* ==================================================
+   COACH MARK
+   ================================================== */
+.spotlight {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.spotlight.visible { opacity: 1; }
+.spotlight-hole {
+  position: absolute;
+  border-radius: var(--r-m);
+  box-shadow:
+    0 0 0 9999px rgba(17, 20, 32, 0.5),
+    0 0 0 3px var(--secondary-600);
+  transition: all 0.3s;
+}
+.coach {
+  position: fixed;
+  background: var(--grey-white);
+  border-radius: var(--r-m);
+  padding: 16px 18px;
+  width: 320px;
+  box-shadow: var(--shadow-xl);
+  z-index: 100;
+  display: none;
+}
+.coach-step {
+  font-size: 11px;
+  color: var(--secondary-600);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+.coach-title { font-weight: 700; margin-bottom: 6px; font-size: 15px; color: var(--grey-900); }
+.coach-body { color: var(--grey-500); margin-bottom: 14px; font-size: 13px; line-height: 18px; }
+.coach-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.coach-progress { font-size: 11px; color: var(--grey-400); }
+.coach-nav { display: flex; gap: 6px; }
+.coach-btn {
+  background: var(--grey-50);
+  border: none;
+  color: var(--grey-700);
+  padding: 6px 14px;
+  border-radius: var(--r-s);
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 500;
+}
+.coach-btn.primary { background: var(--primary-700); color: var(--grey-white); }
+.coach-btn:hover { opacity: 0.88; }
+
+/* ==================================================
+   TOAST (per UX writing: title + optional description)
+   ================================================== */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--grey-900);
+  color: var(--grey-white);
+  padding: 14px 20px;
+  border-radius: var(--r-m);
+  font-size: 13px;
+  line-height: 18px;
+  z-index: 600;
+  box-shadow: var(--shadow-xl);
+  animation: toastIn 0.3s;
+  max-width: 360px;
+}
+.toast strong { font-weight: 600; display: block; margin-bottom: 2px; color: var(--grey-white); }
+.toast small { color: var(--grey-300); font-size: 12px; font-weight: 400; }
+@keyframes toastIn {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* ==================================================
+   RECIPE CARD
+   ================================================== */
+.recipe-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.recipe-card {
+  background: var(--grey-white);
+  border: 1px solid var(--grey-100);
+  border-radius: var(--r-xl);
+  padding: 24px;
+  transition: all 0.15s;
+  cursor: pointer;
+}
+.recipe-card:hover {
+  box-shadow: var(--shadow-md-hover);
+  transform: translateY(-2px);
+}
+.recipe-card .r-icon {
+  width: 40px; height: 40px;
+  background: var(--secondary-50);
+  border-radius: var(--r-m);
+  display: grid;
+  place-items: center;
+  margin-bottom: 16px;
+  font-size: 20px;
+}
+.recipe-card .r-title {
+  font-size: 18px;
+  line-height: 22px;
+  font-weight: 600;
+  color: var(--grey-900);
+  margin-bottom: 6px;
+}
+.recipe-card .r-desc {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--grey-500);
+  margin-bottom: 14px;
+}
+.recipe-card .r-tags {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+/* ==================================================
+   SCROLLBAR
+   ================================================== */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--grey-200); border-radius: var(--r-xs); }
+::-webkit-scrollbar-thumb:hover { background: var(--grey-300); }
+</style>
+</head>
+<body>
+
+<!-- SVG ICON SYMBOLS -->
+<svg style="display:none;" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <symbol id="blux-logo" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M12 3 L14.5 5.5 L12 8 L9.5 5.5 Z" />
+      <path fill="currentColor" d="M5.5 9.5 L8 12 L5.5 14.5 L3 12 Z" />
+      <path fill="currentColor" d="M18.5 9.5 L21 12 L18.5 14.5 L16 12 Z" />
+      <path fill="currentColor" d="M12 16 L14.5 18.5 L12 21 L9.5 18.5 Z" />
+    </symbol>
+    <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1V9.5z"/>
+    </symbol>
+    <symbol id="i-recipe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+      <polyline points="14 2 14 8 20 8"/>
+      <line x1="8" y1="13" x2="16" y2="13"/>
+      <line x1="8" y1="17" x2="13" y2="17"/>
+    </symbol>
+    <symbol id="i-analytics" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="3 12 6 12 9 4 15 20 18 12 21 12"/>
+    </symbol>
+    <symbol id="i-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9"/>
+      <circle cx="12" cy="12" r="5"/>
+      <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+    </symbol>
+    <symbol id="i-msg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M22 2L11 13"/>
+      <path d="M22 2l-7 20-4-9-9-4z"/>
+    </symbol>
+    <symbol id="i-template" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="3" width="7" height="7" rx="1"/>
+      <rect x="14" y="3" width="7" height="7" rx="1"/>
+      <rect x="3" y="14" width="7" height="7" rx="1"/>
+      <rect x="14" y="14" width="7" height="7" rx="1"/>
+    </symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9 1.65 1.65 0 0 0 4.27 7.18l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.6 1.65 1.65 0 0 0 10 3.09V3a2 2 0 0 1 4 0v.09A1.65 1.65 0 0 0 15 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+    </symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="6 9 12 15 18 9"/>
+    </symbol>
+    <symbol id="i-chev-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="9 18 15 12 9 6"/>
+    </symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="12" y1="5" x2="12" y2="19"/>
+      <line x1="5" y1="12" x2="19" y2="12"/>
+    </symbol>
+    <symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="22" y1="2" x2="11" y2="13"/>
+      <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+    </symbol>
+    <symbol id="i-play" viewBox="0 0 24 24" fill="currentColor">
+      <polygon points="5 3 19 12 5 21 5 3"/>
+    </symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12"/>
+    </symbol>
+    <symbol id="i-save" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+      <polyline points="17 21 17 13 7 13 7 21"/>
+      <polyline points="7 3 7 8 15 8"/>
+    </symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="18" y1="20" x2="18" y2="10"/>
+      <line x1="12" y1="20" x2="12" y2="4"/>
+      <line x1="6" y1="20" x2="6" y2="14"/>
+    </symbol>
+    <symbol id="i-barchart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="12" width="4" height="8"/>
+      <rect x="10" y="4" width="4" height="16"/>
+      <rect x="17" y="8" width="4" height="12"/>
+    </symbol>
+    <symbol id="i-strategy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 3v18h18"/>
+      <polyline points="7 14 11 10 15 13 21 7"/>
+    </symbol>
+    <symbol id="i-cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="9" cy="21" r="1"/>
+      <circle cx="20" cy="21" r="1"/>
+      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+    </symbol>
+    <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+      <circle cx="12" cy="7" r="4"/>
+    </symbol>
+    <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+      <circle cx="9" cy="7" r="4"/>
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+      <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+    </symbol>
+    <symbol id="i-bag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+      <line x1="3" y1="6" x2="21" y2="6"/>
+      <path d="M16 10a4 4 0 0 1-8 0"/>
+    </symbol>
+    <symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="8" y1="6" x2="21" y2="6"/>
+      <line x1="8" y1="12" x2="21" y2="12"/>
+      <line x1="8" y1="18" x2="21" y2="18"/>
+      <line x1="3" y1="6" x2="3.01" y2="6"/>
+      <line x1="3" y1="12" x2="3.01" y2="12"/>
+      <line x1="3" y1="18" x2="3.01" y2="18"/>
+    </symbol>
+    <symbol id="i-sparkle" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 2l2 7 7 2-7 2-2 7-2-7-7-2 7-2z"/>
+    </symbol>
+    <symbol id="i-help" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+      <line x1="12" y1="17" x2="12.01" y2="17"/>
+    </symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <polyline points="12 6 12 12 16 14"/>
+    </symbol>
+    <symbol id="i-branch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="6" cy="3" r="2"/>
+      <circle cx="6" cy="21" r="2"/>
+      <circle cx="18" cy="12" r="2"/>
+      <path d="M6 5v14"/>
+      <path d="M6 12h10"/>
+    </symbol>
+    <symbol id="i-exit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+      <polyline points="16 17 21 12 16 7"/>
+      <line x1="21" y1="12" x2="9" y2="12"/>
+    </symbol>
+    <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="18" y1="6" x2="6" y2="18"/>
+      <line x1="6" y1="6" x2="18" y2="18"/>
+    </symbol>
+    <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="12" y1="16" x2="12" y2="12"/>
+      <line x1="12" y1="8" x2="12.01" y2="8"/>
+    </symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="3 6 5 6 21 6"/>
+      <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+      <path d="M10 11v6"/>
+      <path d="M14 11v6"/>
+    </symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+      <line x1="12" y1="9" x2="12" y2="13"/>
+      <line x1="12" y1="17" x2="12.01" y2="17"/>
+    </symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="5" y1="12" x2="19" y2="12"/>
+      <polyline points="12 5 19 12 12 19"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- Welcome -->
+<div class="welcome-bd" id="welcome">
+  <div class="welcome-card">
+    <div class="wl-logo"><svg><use href="#blux-logo"/></svg></div>
+    <h1>Blux를 경험해봐요</h1>
+    <p>자율주행 CRM 마케팅이 실제로 어떻게 돌아가는지<br>5가지 시나리오로 직접 확인해요.</p>
+    <div class="welcome-tours">
+      <div class="welcome-tour" onclick="startTour('agent-campaign')">
+        <div class="num">1</div>
+        <div>
+          <div class="info-title">Blux Agent로 원클릭 캠페인</div>
+          <div class="info-desc">오디언스부터 발송까지 한 문장으로</div>
+        </div>
+      </div>
+      <div class="welcome-tour" onclick="startTour('agent-report')">
+        <div class="num">2</div>
+        <div>
+          <div class="info-title">Blux Agent로 성과 리포트</div>
+          <div class="info-desc">분석 요청 한 줄로 인사이트 확인</div>
+        </div>
+      </div>
+      <div class="welcome-tour" onclick="startTour('manual-campaign')">
+        <div class="num">3</div>
+        <div>
+          <div class="info-title">직접 캠페인 세팅</div>
+          <div class="info-desc">세밀한 컨트롤이 필요할 때</div>
+        </div>
+      </div>
+      <div class="welcome-tour" onclick="startTour('personalization')">
+        <div class="num">4</div>
+        <div>
+          <div class="info-title">AI 오디언스 × 상품 추천</div>
+          <div class="info-desc">초개인화 마케팅의 실체</div>
+        </div>
+      </div>
+      <div class="welcome-tour" onclick="startTour('scenario')">
+        <div class="num">5</div>
+        <div>
+          <div class="info-title">시나리오로 자동화</div>
+          <div class="info-desc">유저 여정 기반 자동 발송 흐름</div>
+        </div>
+      </div>
+    </div>
+    <button class="welcome-close" onclick="closeWelcome()">자유 탐색으로 시작</button>
+  </div>
+</div>
+
+<!-- Admin Banner -->
+<div class="admin-banner">
+  <svg><use href="#i-alert"/></svg>
+  데모 환경이에요. 실제 발송은 일어나지 않고, 데이터는 샘플이에요.
+</div>
+
+<div class="app">
+
+  <!-- =============== SIDEBAR =============== -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-logo"><svg><use href="#blux-logo"/></svg></div>
+      <span class="demo-pill">DEMO</span>
+    </div>
+
+    <div class="sidebar-nav">
+      <div class="nav-item active" data-scene="home">
+        <svg class="ic"><use href="#i-home"/></svg>
+        홈
+      </div>
+      <div class="nav-item" data-scene="recipe">
+        <svg class="ic"><use href="#i-recipe"/></svg>
+        블럭스 추천 레시피
+      </div>
+
+      <div class="nav-group" id="nav-analytics">
+        <div class="nav-group-head" onclick="toggleNavGroup('nav-analytics')">
+          <svg class="ic"><use href="#i-analytics"/></svg>
+          분석
+          <svg class="chev"><use href="#i-chev"/></svg>
+        </div>
+        <div class="nav-subitems">
+          <div class="nav-subitem" data-scene="analytics">캠페인 통계</div>
+        </div>
+      </div>
+
+      <div class="nav-group" id="nav-targeting">
+        <div class="nav-group-head" onclick="toggleNavGroup('nav-targeting')">
+          <svg class="ic"><use href="#i-target"/></svg>
+          타겟팅
+          <svg class="chev"><use href="#i-chev"/></svg>
+        </div>
+        <div class="nav-subitems">
+          <div class="nav-subitem" data-scene="audiences">오디언스</div>
+          <div class="nav-subitem">블럭스 유저 등급</div>
+        </div>
+      </div>
+
+      <div class="nav-group" id="nav-messaging">
+        <div class="nav-group-head" onclick="toggleNavGroup('nav-messaging')">
+          <svg class="ic"><use href="#i-msg"/></svg>
+          메시징
+          <svg class="chev"><use href="#i-chev"/></svg>
+        </div>
+        <div class="nav-subitems">
+          <div class="nav-subitem" data-scene="campaigns">캠페인</div>
+          <div class="nav-subitem" data-scene="scenario">시나리오</div>
+          <div class="nav-subitem">인앱 메시지</div>
+        </div>
+      </div>
+
+      <div class="nav-group closed" id="nav-template">
+        <div class="nav-group-head" onclick="toggleNavGroup('nav-template')">
+          <svg class="ic"><use href="#i-template"/></svg>
+          템플릿
+          <svg class="chev"><use href="#i-chev"/></svg>
+        </div>
+        <div class="nav-subitems">
+          <div class="nav-subitem">알림톡</div>
+        </div>
+      </div>
+
+      <div class="nav-group closed" id="nav-manage">
+        <div class="nav-group-head" onclick="toggleNavGroup('nav-manage')">
+          <svg class="ic"><use href="#i-settings"/></svg>
+          관리
+          <svg class="chev"><use href="#i-chev"/></svg>
+        </div>
+        <div class="nav-subitems">
+          <div class="nav-subitem">발송 빈도</div>
+          <div class="nav-subitem">데이터</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-user">
+      <div class="user-avatar">N</div>
+      <div class="user-meta">
+        <div class="name">Nick(Blux)</div>
+        <div class="role">demo</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- =============== MAIN =============== -->
+  <main class="main" id="main">
+
+    <!-- Tour Bar -->
+    <div class="tourbar">
+      <span class="tb-label">Guided Tours</span>
+      <button class="tour-btn" data-tour="agent-campaign">① AI 에이전트 캠페인</button>
+      <button class="tour-btn" data-tour="agent-report">② AI 성과 리포트</button>
+      <button class="tour-btn" data-tour="manual-campaign">③ 직접 세팅</button>
+      <button class="tour-btn" data-tour="personalization">④ 초개인화</button>
+      <button class="tour-btn" data-tour="scenario">⑤ 시나리오</button>
+      <div class="tourbar-spacer"></div>
+      <span class="guide-link"><svg><use href="#i-help"/></svg> 가이드 바로가기</span>
+    </div>
+
+    <!-- ===== HOME SCENE (Pattern D : Dashboard + Agent entry) ===== -->
+    <section class="scene active" id="scene-home">
+
+      <!-- Hero: Agent entry -->
+      <div class="home-hero">
+        <div class="logo-big"><svg><use href="#blux-logo"/></svg></div>
+        <h1>Nick(Blux)님, 안녕하세요!</h1>
+        <div class="sub">오늘도 유저들의 여정에 딱 맞는 메시지를 전해봐요.</div>
+
+        <div class="agent-input-card">
+          <div class="agent-input-hint">궁금한 데이터를 <span class="brand">블럭스 Agent</span>에게 물어보세요</div>
+          <div class="agent-input-row">
+            <input type="text" id="home-agent-input" placeholder="@" />
+            <button class="send-btn" onclick="homeSend()">
+              <svg><use href="#i-send"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="suggested-prompts">
+          <button class="prompt-chip" onclick="triggerAgent('report')">
+            <svg><use href="#i-chart"/></svg>
+            지난 30일간 주기성 캠페인 성과를 정리해줘
+          </button>
+          <button class="prompt-chip" onclick="triggerAgent('analysis')">
+            <svg><use href="#i-barchart"/></svg>
+            시간대/요일 별 이벤트 발생 분포를 분석해줘
+          </button>
+          <button class="prompt-chip" onclick="triggerAgent('strategy')">
+            <svg><use href="#i-strategy"/></svg>
+            첫 구매 유저 대상 재구매 유도 전략을 세워줘
+          </button>
+          <button class="prompt-chip" onclick="triggerAgent('campaign')">
+            <svg><use href="#i-sparkle"/></svg>
+            재구매 유도에 적합한 오디언스를 뽑아줘
+          </button>
+        </div>
+      </div>
+
+      <!-- KPI -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">집행 비용</div>
+          <div class="kpi-value">₩4,280,000</div>
+          <div class="kpi-updated">지난 30일 · 어제 23:50 기준</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">전환 수익</div>
+          <div class="kpi-value">₩128,430,000</div>
+          <div class="kpi-delta">▲ 23% vs 이전 30일</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">평균 객단가</div>
+          <div class="kpi-value">₩47,200</div>
+          <div class="kpi-delta">▲ 4.2%</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">ROAS</div>
+          <div class="kpi-value">3,002%</div>
+          <div class="kpi-delta">▲ 183%p</div>
+        </div>
+      </div>
+
+      <!-- Funnel -->
+      <div class="card" style="margin-bottom: 16px;">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">퍼널 지표</div>
+            <div class="panel-subtitle">지난 30일 · 전체 캠페인 합산</div>
+          </div>
+        </div>
+        <div class="funnel-row">
+          <div class="funnel-card">
+            <div class="funnel-label">발송 성공</div>
+            <div class="funnel-value">1,243,820</div>
+            <div class="funnel-rate">전체의 99.8%</div>
+          </div>
+          <div class="funnel-arrow"><svg><use href="#i-arrow-right"/></svg></div>
+          <div class="funnel-card">
+            <div class="funnel-label">오픈</div>
+            <div class="funnel-value">475,140</div>
+            <div class="funnel-rate">38.2%</div>
+          </div>
+          <div class="funnel-arrow"><svg><use href="#i-arrow-right"/></svg></div>
+          <div class="funnel-card">
+            <div class="funnel-label">클릭</div>
+            <div class="funnel-value">142,580</div>
+            <div class="funnel-rate">30.0%</div>
+          </div>
+          <div class="funnel-arrow"><svg><use href="#i-arrow-right"/></svg></div>
+          <div class="funnel-card">
+            <div class="funnel-label">전환</div>
+            <div class="funnel-value">58,460</div>
+            <div class="funnel-rate">4.7%</div>
+          </div>
+          <div class="funnel-arrow"><svg><use href="#i-arrow-right"/></svg></div>
+          <div class="funnel-card">
+            <div class="funnel-label">전환 수익</div>
+            <div class="funnel-value">₩128M</div>
+            <div class="funnel-rate" style="color:var(--success-700);">ROAS 3,002%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live campaigns table -->
+      <div class="tbl-wrap">
+        <div class="tbl-head">
+          <div>
+            <div class="panel-title">진행 중인 캠페인</div>
+            <div class="panel-subtitle">주기성 캠페인과 시나리오가 실시간으로 돌아가고 있어요</div>
+          </div>
+          <button class="btn">전체 보기</button>
+        </div>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th style="width:32%;">캠페인명</th>
+              <th>채널</th><th>발송</th><th>오픈율</th><th>전환율</th><th>상태</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="asset-name"><strong>이탈 위험 유저 재참여</strong> <span class="tag-ai">AI</span></div></td>
+              <td>카카오 알림톡</td><td>12,481</td><td>42.1%</td><td>6.2%</td>
+              <td><span class="status-pill active"><span class="dot"></span>활성화</span></td>
+            </tr>
+            <tr>
+              <td><div class="asset-name"><strong>장바구니 리마인드 시나리오</strong></div></td>
+              <td>앱 푸시</td><td>3,241/일</td><td>51.3%</td><td>12.4%</td>
+              <td><span class="status-pill active"><span class="dot"></span>활성화</span></td>
+            </tr>
+            <tr>
+              <td><div class="asset-name">뷰티 카테고리 신상 안내</div></td>
+              <td>RCS 문자</td><td>8,721</td><td>35.8%</td><td>3.9%</td>
+              <td><span class="status-pill done"><span class="dot"></span>완료</span></td>
+            </tr>
+            <tr>
+              <td><div class="asset-name">브랜드 관심 유저 주간 추천 <span class="tag-ai">AI</span></div></td>
+              <td>앱 푸시</td><td>—</td><td>—</td><td>—</td>
+              <td><span class="status-pill draft"><span class="dot"></span>임시저장</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===== AUDIENCES SCENE (Pattern B: 3-Option Start) ===== -->
+    <section class="scene" id="scene-audiences">
+      <div class="page-header">
+        <div class="page-title">오디언스</div>
+        <span class="guide-link"><svg><use href="#i-help"/></svg> 가이드 바로가기</span>
+        <div class="page-actions">
+          <button class="btn primary" onclick="goTo('audience-create')">
+            <svg><use href="#i-plus"/></svg>
+            새 오디언스 만들기
+          </button>
+        </div>
+      </div>
+
+      <div class="option-grid">
+        <div class="option-card" onclick="goTo('audience-create')">
+          <div class="opt-icon"><svg><use href="#i-sparkle"/></svg></div>
+          <div class="opt-title">AI 오디언스 <span class="ai-badge">AI</span></div>
+          <div class="opt-desc">AI가 행동 가능성 점수를 예측해 구간별로 유저를 자동 분류해요.</div>
+        </div>
+        <div class="option-card">
+          <div class="opt-icon"><svg><use href="#i-list"/></svg></div>
+          <div class="opt-title">룰 세그먼트</div>
+          <div class="opt-desc">조건 블록을 조립해 정확한 타겟을 만들어요.</div>
+        </div>
+        <div class="option-card">
+          <div class="opt-icon"><svg><use href="#i-users"/></svg></div>
+          <div class="opt-title">커스텀 세그먼트</div>
+          <div class="opt-desc">CSV를 업로드해서 직접 유저 목록을 지정해요.</div>
+        </div>
+      </div>
+
+      <div class="tbl-wrap">
+        <div class="tbl-head">
+          <div class="filter-tabs">
+            <button class="filter-tab active">전체<span class="count">12</span></button>
+            <button class="filter-tab">활성화<span class="count">8</span></button>
+            <button class="filter-tab">임시저장<span class="count">3</span></button>
+            <button class="filter-tab">보관됨<span class="count">1</span></button>
+          </div>
+        </div>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th style="width:36%;">오디언스명</th>
+              <th>유형</th><th>예상 유저 수</th><th>관리자</th><th>사용 중</th><th>상태</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="asset-name"><strong>이탈 위험 유저 상위 30%</strong></div></td>
+              <td><span class="tag-ai">AI 오디언스</span></td>
+              <td>12,483</td>
+              <td>Nick(Blux)</td>
+              <td>캠페인 2개</td>
+              <td><span class="status-pill active"><span class="dot"></span>활성화</span></td>
+            </tr>
+            <tr>
+              <td><div class="asset-name"><strong>뷰티 카테고리 관심 유저</strong></div></td>
+              <td>AI 오디언스</td>
+              <td>23,104</td>
+              <td>Nick(Blux)</td>
+              <td>캠페인 1개</td>
+              <td><span class="status-pill active"><span class="dot"></span>활성화</span></td>
+            </tr>
+            <tr>
+              <td><div class="asset-name">최근 30일 미구매 유저</div></td>
+              <td>룰 세그먼트</td>
+              <td>48,203</td>
+              <td>Nick(Blux)</td>
+              <td>시나리오 1개</td>
+              <td><span class="status-pill active"><span class="dot"></span>활성화</span></td>
+            </tr>
+            <tr>
+              <td><div class="asset-name">VIP 프리미엄 티어</div></td>
+              <td>커스텀 세그먼트</td>
+              <td>1,204</td>
+              <td>Jenny</td>
+              <td>—</td>
+              <td><span class="status-pill draft"><span class="dot"></span>임시저장</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===== AUDIENCE CREATE (AI type + range selector) ===== -->
+    <section class="scene" id="scene-audience-create">
+      <div class="page-header">
+        <div class="page-title">오디언스 만들기</div>
+        <div class="page-actions">
+          <button class="btn"><svg><use href="#i-save"/></svg> 임시저장</button>
+          <button class="btn primary" onclick="toast('오디언스를 저장했어요', '이제 캠페인에서 이 오디언스를 타겟으로 선택할 수 있어요')">
+            <svg><use href="#i-play"/></svg> 활성화
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">유형</div>
+            <div class="panel-subtitle">세 가지 방식 중 원하는 방식으로 시작해요</div>
+          </div>
+        </div>
+        <div class="chip-group">
+          <button class="chip-btn selected"><svg><use href="#i-sparkle"/></svg> AI 오디언스</button>
+          <button class="chip-btn">룰 세그먼트</button>
+          <button class="chip-btn">커스텀 세그먼트</button>
+        </div>
+      </div>
+
+      <div class="card" id="panel-ai-predict">
+        <div class="panel-head">
+          <div class="panel-title">AI 예측 기준</div>
+        </div>
+        <div class="field">
+          <div class="field-label">AI가 예측할 행동을 선택해요</div>
+          <div class="chip-group">
+            <button class="chip-btn"><svg><use href="#i-cart"/></svg> 구매 유도</button>
+            <button class="chip-btn"><svg><use href="#i-user"/></svg> 방문 유도</button>
+            <button class="chip-btn"><svg><use href="#i-bag"/></svg> 브랜드 홍보</button>
+            <button class="chip-btn selected"><svg><use href="#i-list"/></svg> 카테고리 홍보</button>
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <div class="field-label">카테고리 선택 <span class="req">*</span></div>
+          <div class="audience-picker">
+            <svg class="pick-ic"><use href="#i-bag"/></svg>
+            <span class="name">뷰티 · 향수</span>
+            <svg class="chev"><use href="#i-chev"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" id="panel-ai-result">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">타겟 유저 AI 예측 결과</div>
+            <div class="panel-subtitle">원하는 구간을 드래그해서 오디언스를 만들어요</div>
+          </div>
+        </div>
+
+        <div class="predict-frame">
+          <div class="predict-chart">
+            <div class="axis-y-top">3,001</div>
+            <div class="axis-y-label">유저수 (명)</div>
+            <div class="histogram-canvas" style="position:relative;">
+              <div class="range-tooltip" style="left: 42%;">구간 내 유저수 9,802명</div>
+              <svg viewBox="0 0 400 180" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="hist-grad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#006FFD" stop-opacity="0.35"/>
+                    <stop offset="100%" stop-color="#006FFD" stop-opacity="0.02"/>
+                  </linearGradient>
+                </defs>
+                <!-- Curve -->
+                <path d="M 0,180 L 10,170 L 20,130 L 30,95 L 35,55 L 40,35 L 45,25 L 50,45 L 55,85 L 60,128 L 70,150 L 90,165 L 120,172 L 180,168 L 200,165 L 210,155 L 215,150 L 220,160 L 230,170 L 280,175 L 340,175 L 370,170 L 385,160 L 400,140 L 400,180 Z"
+                      fill="url(#hist-grad)"/>
+                <path d="M 0,180 L 10,170 L 20,130 L 30,95 L 35,55 L 40,35 L 45,25 L 50,45 L 55,85 L 60,128 L 70,150 L 90,165 L 120,172 L 180,168 L 200,165 L 210,155 L 215,150 L 220,160 L 230,170 L 280,175 L 340,175 L 370,170 L 385,160 L 400,140"
+                      fill="none" stroke="#006FFD" stroke-width="1.5"/>
+                <!-- Range dotted -->
+                <line x1="32" y1="0" x2="32" y2="180" stroke="#006FFD" stroke-dasharray="3 3" stroke-opacity="0.4"/>
+                <line x1="232" y1="0" x2="232" y2="180" stroke="#006FFD" stroke-dasharray="3 3" stroke-opacity="0.4"/>
+              </svg>
+            </div>
+            <div class="range-slider">
+              <div class="range-active" style="left: 8%; right: 42%;"></div>
+              <div class="range-handle" style="left: 8%;"></div>
+              <div class="range-handle" style="left: 58%;"></div>
+            </div>
+            <div class="range-x-labels"><span>낮음</span><span>높음</span></div>
+            <div class="range-x-center">행동 가능성 점수</div>
+          </div>
+
+          <div class="predict-stats">
+            <div class="stats-row head"><span>유저 행동</span><span>구간내 평균값</span></div>
+            <div class="stats-row"><span class="k">방문 주기</span><span class="v">0.3일</span></div>
+            <div class="stats-row"><span class="k">마지막 행동</span><span class="v">9.9일 전</span></div>
+            <div class="stats-row"><span class="k">마지막 구매</span><span class="v">20.5일 전</span></div>
+            <div class="stats-row"><span class="k">행동 수</span><span class="v">2.1번</span></div>
+            <div class="stats-row"><span class="k">최근 1주일 행동 수</span><span class="v">0.7번</span></div>
+            <div class="stats-row"><span class="k">구매 수</span><span class="v">0.1번</span></div>
+            <div class="stats-row"><span class="k">구매 주기</span><span class="v">0.0일</span></div>
+            <div class="stats-row"><span class="k">총 구매 금액</span><span class="v">₩1,895</span></div>
+          </div>
+        </div>
+
+        <div class="count-banner">
+          선택 구간 예상 모수 · <strong>9,802명</strong> (전체의 13.7%)
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CAMPAIGNS LIST (Pattern A) ===== -->
+    <section class="scene" id="scene-campaigns">
+      <div class="page-header">
+        <div class="page-title">캠페인</div>
+        <span class="guide-link"><svg><use href="#i-help"/></svg> 가이드 바로가기</span>
+        <div class="page-actions">
+          <button class="btn primary" onclick="goTo('campaign-create')">
+            <svg><use href="#i-plus"/></svg>
+            새 캠페인 만들기
+          </button>
+        </div>
+      </div>
+
+      <div class="tbl-wrap">
+        <div class="tbl-head">
+          <div class="filter-tabs">
+            <button class="filter-tab active">전체<span class="count">24</span></button>
+            <button class="filter-tab">활성화<span class="count">6</span></button>
+            <button class="filter-tab">임시저장<span class="count">4</span></button>
+            <button class="filter-tab">완료<span class="count">12</span></button>
+            <button class="filter-tab">중지<span class="count">2</span></button>
+          </div>
+        </div>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th style="width:32%;">캠페인명</th>
+              <th>채널</th><th>발송</th><th>오픈율</th><th>전환율</th><th>상태</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="asset-name"><strong>이탈 위험 유저 재참여</strong> <span class="tag-ai">AI</span></div></td>
+              <td>카카오 알림톡</td><td>12,481</td><td>42.1%</td><td>6.2%</td>
+              <td><span class="status-pill active"><span class="dot"></span>활성화</span></td>
+            </tr>
+            <tr>
+              <td><div class="asset-name"><strong>재구매 유도 브랜드메시지</strong></div></td>
+              <td>카카오 브랜드메시지</td><td>—</td><td>—</td><td>—</td>
+              <td><span class="status-pill draft"><span class="dot"></span>임시저장</span></td>
+            </tr>
+            <tr>
+              <td><div class="asset-name">뷰티 카테고리 신상 안내</div></td>
+              <td>RCS 문자</td><td>8,721</td><td>35.8%</td><td>3.9%</td>
+              <td><span class="status-pill done"><span class="dot"></span>완료</span></td>
+            </tr>
+            <tr>
+              <td><div class="asset-name">브랜드 관심 유저 주간 추천 <span class="tag-ai">AI</span></div></td>
+              <td>앱 푸시</td><td>—</td><td>—</td><td>—</td>
+              <td><span class="status-pill draft"><span class="dot"></span>임시저장</span></td>
+            </tr>
+            <tr>
+              <td><div class="asset-name">가입 축하 쿠폰</div></td>
+              <td>카카오 알림톡</td><td>1,243</td><td>68.2%</td><td>12.1%</td>
+              <td><span class="status-pill active"><span class="dot"></span>활성화</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===== CAMPAIGN CREATE (Pattern C: Form + Preview) ===== -->
+    <section class="scene" id="scene-campaign-create">
+      <div class="page-header">
+        <div class="page-title">새 캠페인 만들기</div>
+        <span class="guide-link"><svg><use href="#i-help"/></svg> 가이드 바로가기</span>
+        <div class="page-actions">
+          <button class="btn"><svg><use href="#i-save"/></svg> 임시저장</button>
+          <button class="btn primary" onclick="toast('캠페인이 활성화됐어요', '발송 예정 시각에 맞춰 자동으로 발송돼요')">
+            <svg><use href="#i-play"/></svg> 활성화
+          </button>
+        </div>
+      </div>
+
+      <div class="form-preview">
+        <div class="form-col">
+
+          <div class="card">
+            <div class="panel-head"><div class="panel-title">기본 정보</div></div>
+            <div class="field">
+              <div class="field-label">캠페인 이름 <span class="req">*</span></div>
+              <input type="text" class="input" value="재구매 유도 브랜드메시지" />
+              <div class="char-counter">14/100 자</div>
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <div class="field-label">캠페인 태그 <svg width="12" height="12" style="color:var(--icon-default);"><use href="#i-help"/></svg></div>
+              <div class="tag-input-box">
+                <span class="tag-chip-small">재구매 <span class="x">×</span></span>
+                <span class="tag-chip-small">프로모션 <span class="x">×</span></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" id="field-audience">
+            <div class="panel-head"><div class="panel-title">발송 대상</div></div>
+            <div class="field">
+              <div class="field-label">오디언스 선택</div>
+              <div style="display:flex; gap:10px;">
+                <div class="audience-picker" style="flex:1;">
+                  <svg class="pick-ic"><use href="#i-target"/></svg>
+                  <span class="name">재구매 유도 타깃 (최근 30일 미구매)</span>
+                  <svg class="chev"><use href="#i-chev"/></svg>
+                </div>
+                <button class="btn"><svg><use href="#i-plus"/></svg> 새 필터 추가</button>
+              </div>
+              <div class="field-help">예상 모수: 12,483명 · 실시간 업데이트</div>
+            </div>
+
+            <div class="ai-optimize" id="ai-optimize">
+              <div class="ai-check" id="ai-check"></div>
+              <div class="ai-optimize-info">
+                <div class="ai-name"><svg><use href="#i-sparkle"/></svg> AI 발송 대상 최적화</div>
+                <div class="ai-desc">발송 시 구매 가능성이 낮은 유저를 자동으로 제외해 ROAS를 높여요 (최대 20%)</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" id="field-message">
+            <div class="panel-head"><div class="panel-title">메시지 작성</div></div>
+            <div class="field">
+              <div class="field-label">발송 채널</div>
+              <div class="chip-group">
+                <button class="chip-btn selected">카카오 브랜드 메시지</button>
+                <button class="chip-btn">카카오 알림톡</button>
+                <button class="chip-btn">문자</button>
+                <button class="chip-btn">RCS 문자</button>
+                <button class="chip-btn">앱 푸시</button>
+                <button class="chip-btn">이메일</button>
+                <button class="chip-btn">웹훅</button>
+              </div>
+            </div>
+            <div class="field" style="margin-bottom:12px;">
+              <div class="field-label">메시지 본문</div>
+              <div class="msg-editor">
+                <div class="heading">(광고) 블럭스</div>
+                <span class="var-chip">name</span>님, 오랜만이에요!<br><br>
+                지난번 구매하신 <span class="var-chip">latest_purchase_item.name</span> 은 잘 쓰고 계신가요?<br><br>
+                <span class="var-chip">name</span>님만을 위한 특별 혜택을 준비했어요.<br>
+                지금 바로 확인하고 다시 쇼핑의 즐거움을 느껴봐요 🎁
+              </div>
+              <div class="field-help">변수는 유저별로 자동 치환돼요</div>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <button class="btn"><svg><use href="#i-sparkle"/></svg> AI 메시지 빌더</button>
+              <button class="btn" onclick="openRecModal()"><svg><use href="#i-sparkle"/></svg> 상품 추천 설정</button>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="preview-col">
+          <div class="card" id="field-preview">
+            <div class="panel-head" style="margin-bottom: 16px;">
+              <div class="panel-title">미리보기</div>
+            </div>
+            <div class="phone">
+              <div class="phone-status">카카오 브랜드 메시지</div>
+              <div class="push-card">
+                <div class="push-app"><span class="app-ic"></span> (광고) 블럭스</div>
+                <div class="push-title">Nick님, 오랜만이에요 👋</div>
+                <div class="push-body">
+                  지난번 구매하신 <span class="hl">LANEIGE 워터뱅크</span>은 잘 쓰고 계신가요?<br><br>
+                  Nick님만을 위한 <strong style="color:var(--secondary-600);">특별 혜택</strong>을 준비했어요 🎁
+                </div>
+              </div>
+            </div>
+            <button class="btn" style="margin-top:12px; width:100%; justify-content:center;" onclick="toast('테스트 발송을 보냈어요', '내 카카오톡으로 5분 내 도착해요')">테스트 발송</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SCENARIO (Pattern E: Canvas) ===== -->
+    <section class="scene" id="scene-scenario">
+      <div class="page-header">
+        <span class="status-pill draft"><span class="dot"></span>임시저장</span>
+        <div class="page-title" contenteditable="true">장바구니 리마인드 시나리오</div>
+        <div class="page-actions">
+          <button class="btn"><svg><use href="#i-save"/></svg> 저장하기</button>
+          <button class="btn primary" id="scenario-activate"
+                  onclick="toast('시나리오를 활성화했어요', '유저가 조건에 들어오면 자동으로 메시지가 발송돼요')">
+            <svg><use href="#i-play"/></svg> 활성화
+          </button>
+        </div>
+      </div>
+
+      <div class="scenario-canvas">
+        <div class="sc-toolbar">
+          <button>성과 측정 이벤트</button>
+          <button>발송 제한 설정</button>
+        </div>
+
+        <!-- Start -->
+        <div class="sc-node start" style="left: 50%; top: 40px; transform: translateX(-50%);" id="sc-start">
+          <div class="sc-node-head">
+            <span class="ic"><svg><use href="#i-play"/></svg></span>
+            시작
+          </div>
+          <div class="sc-node-body"><strong>cartadd</strong> 이벤트가 발생할 때</div>
+          <div class="sc-perf">+48,203</div>
+        </div>
+
+        <!-- Plus to Delay -->
+        <div class="sc-plus" style="left: calc(50% - 11px); top: 140px;">+</div>
+
+        <!-- Delay -->
+        <div class="sc-node delay" style="left: 50%; top: 180px; transform: translateX(-50%);" id="sc-delay">
+          <div class="sc-node-head">
+            <span class="ic"><svg><use href="#i-clock"/></svg></span>
+            딜레이
+            <button class="sc-node-close"><svg width="12" height="12"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="sc-node-body"><strong>1시간</strong> 대기</div>
+          <div class="sc-perf" style="background: var(--success-600);">대기 중 1,284</div>
+        </div>
+
+        <!-- Plus to Branch -->
+        <div class="sc-plus" style="left: calc(50% - 11px); top: 280px;">+</div>
+
+        <!-- Branch -->
+        <div class="sc-node branch" style="left: 50%; top: 320px; transform: translateX(-50%);" id="sc-branch">
+          <div class="sc-node-head">
+            <span class="ic"><svg><use href="#i-branch"/></svg></span>
+            분기
+            <button class="sc-node-close"><svg width="12" height="12"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="sc-node-body">
+            <strong>order</strong> 이벤트 발생 여부<br>
+            <span style="color:var(--grey-500); font-size:11px;">+1시간 이내</span>
+          </div>
+        </div>
+
+        <!-- Branch labels -->
+        <div class="branch-label" style="left: 32%; top: 430px;">Yes (구매함)</div>
+        <div class="branch-label" style="left: 62%; top: 430px;">No (미구매)</div>
+
+        <!-- Plus on each branch -->
+        <div class="sc-plus" style="left: 22%; top: 460px;">+</div>
+        <div class="sc-plus" style="left: calc(62% + 14px); top: 460px;">+</div>
+
+        <!-- Message node (No branch) -->
+        <div class="sc-node message" style="right: 12%; top: 500px;" id="sc-message">
+          <div class="sc-node-head">
+            <span class="ic"><svg><use href="#i-msg"/></svg></span>
+            메시지 #1
+            <button class="sc-node-close"><svg width="12" height="12"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="sc-node-body">
+            <strong>💬 카카오 브랜드 메시지</strong><br>
+            <span style="color:var(--grey-500); font-size:11px;">AI 장바구니 연관 상품 추천</span>
+          </div>
+          <div class="sc-perf">발송 3,241 · 전환 402</div>
+        </div>
+
+        <!-- Plus to exit -->
+        <div class="sc-plus" style="left: calc(50% - 11px); top: 610px;">+</div>
+
+        <!-- Exit -->
+        <div class="sc-node exit" style="left: 50%; top: 650px; transform: translateX(-50%);" id="sc-exit">
+          <div class="sc-node-head">
+            <span class="ic"><svg><use href="#i-exit"/></svg></span>
+            종료
+          </div>
+          <div class="sc-node-body"><strong>order</strong> 이벤트 발생 또는 7일 경과</div>
+        </div>
+
+        <!-- SVG lines -->
+        <svg style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none;" preserveAspectRatio="none">
+          <defs>
+            <marker id="arrow-tail" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#D4D7DE"/>
+            </marker>
+          </defs>
+          <line x1="50%" y1="130" x2="50%" y2="178" stroke="#D4D7DE" stroke-width="1.5" marker-end="url(#arrow-tail)"/>
+          <line x1="50%" y1="270" x2="50%" y2="318" stroke="#D4D7DE" stroke-width="1.5" marker-end="url(#arrow-tail)"/>
+          <path d="M 50% 420 L 50% 448 L 25% 448 L 25% 460" fill="none" stroke="#D4D7DE" stroke-width="1.5"/>
+          <path d="M 50% 420 L 50% 448 L 75% 448 L 75% 460" fill="none" stroke="#D4D7DE" stroke-width="1.5"/>
+          <line x1="75%" y1="486" x2="75%" y2="520" stroke="#D4D7DE" stroke-width="1.5" marker-end="url(#arrow-tail)"/>
+          <line x1="50%" y1="600" x2="50%" y2="648" stroke="#D4D7DE" stroke-width="1.5" marker-end="url(#arrow-tail)"/>
+        </svg>
+
+        <!-- Zoom -->
+        <div class="sc-zoom">
+          <button>+</button>
+          <button>−</button>
+          <button>⛶</button>
+        </div>
+
+        <!-- Minimap -->
+        <div class="sc-minimap">
+          <div class="sc-minimap-viewport"></div>
+          <div class="sc-minimap-node" style="left: 65px; top: 18px; width: 28px; height: 12px;"></div>
+          <div class="sc-minimap-node" style="left: 65px; top: 34px; width: 28px; height: 12px;"></div>
+          <div class="sc-minimap-node" style="left: 65px; top: 50px; width: 28px; height: 12px;"></div>
+          <div class="sc-minimap-node" style="left: 100px; top: 66px; width: 28px; height: 12px;"></div>
+          <div class="sc-minimap-node" style="left: 65px; top: 82px; width: 28px; height: 12px;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== ANALYTICS (Pattern D: Dashboard) ===== -->
+    <section class="scene" id="scene-analytics">
+      <div class="page-header">
+        <div class="page-title">캠페인 통계</div>
+        <div class="page-actions">
+          <button class="btn">지난 30일 ▾</button>
+          <button class="btn">내보내기</button>
+        </div>
+      </div>
+      <div class="kpi-grid">
+        <div class="kpi-card"><div class="kpi-label">집행 비용</div><div class="kpi-value">₩4,280,000</div><div class="kpi-updated">어제 23:50 기준</div></div>
+        <div class="kpi-card"><div class="kpi-label">전환 수익</div><div class="kpi-value">₩128,430,000</div><div class="kpi-delta">▲ 23%</div></div>
+        <div class="kpi-card"><div class="kpi-label">평균 객단가</div><div class="kpi-value">₩47,200</div><div class="kpi-delta">▲ 4.2%</div></div>
+        <div class="kpi-card"><div class="kpi-label">ROAS</div><div class="kpi-value">3,002%</div><div class="kpi-delta">▲ 183%p</div></div>
+      </div>
+
+      <div class="card" style="margin-bottom: 16px;">
+        <div class="panel-head">
+          <div class="panel-title">전체 퍼널</div>
+        </div>
+        <div class="funnel-row">
+          <div class="funnel-card"><div class="funnel-label">발송 성공</div><div class="funnel-value">1,243,820</div><div class="funnel-rate">99.8%</div></div>
+          <div class="funnel-arrow"><svg><use href="#i-arrow-right"/></svg></div>
+          <div class="funnel-card"><div class="funnel-label">오픈</div><div class="funnel-value">475,140</div><div class="funnel-rate">38.2%</div></div>
+          <div class="funnel-arrow"><svg><use href="#i-arrow-right"/></svg></div>
+          <div class="funnel-card"><div class="funnel-label">클릭</div><div class="funnel-value">142,580</div><div class="funnel-rate">30.0%</div></div>
+          <div class="funnel-arrow"><svg><use href="#i-arrow-right"/></svg></div>
+          <div class="funnel-card"><div class="funnel-label">전환</div><div class="funnel-value">58,460</div><div class="funnel-rate">4.7%</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== RECIPE (Pattern A) ===== -->
+    <section class="scene" id="scene-recipe">
+      <div class="page-header">
+        <div class="page-title">블럭스 추천 레시피</div>
+        <span class="guide-link"><svg><use href="#i-help"/></svg> 가이드 바로가기</span>
+      </div>
+      <p style="color:var(--grey-500); font-size:14px; margin-bottom:20px;">
+        목적별로 정리한 캠페인·시나리오 템플릿이에요. 클릭 한 번으로 복제해서 바로 써봐요.
+      </p>
+      <div class="recipe-grid">
+        <div class="recipe-card">
+          <div class="r-icon">🛒</div>
+          <div class="r-title">장바구니 리마인드</div>
+          <div class="r-desc">담아두고 구매하지 않은 유저에게 AI 추천 상품을 연결해서 리마인드해요.</div>
+          <div class="r-tags">
+            <span class="tag-chip-small">시나리오</span>
+            <span class="tag-chip-small">카카오톡</span>
+          </div>
+        </div>
+        <div class="recipe-card">
+          <div class="r-icon">🎯</div>
+          <div class="r-title">이탈 위험 유저 윈백</div>
+          <div class="r-desc">AI가 예측한 이탈 위험 구간 유저에게 맞춤 쿠폰을 발송해요.</div>
+          <div class="r-tags">
+            <span class="tag-chip-small">AI 오디언스</span>
+            <span class="tag-chip-small">알림톡</span>
+          </div>
+        </div>
+        <div class="recipe-card">
+          <div class="r-icon">🎁</div>
+          <div class="r-title">가입 축하 첫 구매 유도</div>
+          <div class="r-desc">가입 후 7일 동안 단계별 혜택을 자동으로 안내해요.</div>
+          <div class="r-tags">
+            <span class="tag-chip-small">시나리오</span>
+            <span class="tag-chip-small">앱 푸시</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- =============== RIGHT CHAT PANEL =============== -->
+<div class="chat-panel" id="chat-panel">
+  <div class="chat-head">
+    <div>
+      <div class="chat-title-row">
+        Blux Agent
+        <svg class="chev"><use href="#i-chev"/></svg>
+      </div>
+      <div class="chat-meta">
+        <svg><use href="#i-info"/></svg>
+        마지막 데이터 업데이트: 어제 23:50
+      </div>
+    </div>
+    <button class="chat-close" onclick="closeChatPanel()"><svg><use href="#i-close"/></svg></button>
+  </div>
+  <div class="chat-body" id="chat-body"></div>
+  <div class="chat-input-wrap">
+    <div class="chat-input-box">
+      <input type="text" id="chat-sub-input" placeholder="궁금한 데이터를 블럭스 Agent에게 물어보세요" />
+      <button onclick="chatSubSend()"><svg><use href="#i-send"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<!-- =============== MODAL: 상품 추천 설정 =============== -->
+<div class="modal-bd" id="rec-modal">
+  <div class="modal wide">
+    <div class="modal-head">
+      <div class="modal-title">
+        <svg><use href="#i-sparkle"/></svg>
+        상품 추천 설정
+      </div>
+      <div class="modal-subtitle">이 메시지에 어떤 상품을 추천할지 골라봐요.</div>
+      <button class="modal-close" onclick="closeRecModal()"><svg><use href="#i-close"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="field-label">상품 추천 유형</div>
+      <div class="rec-type-row" onclick="selectRecType(this)">
+        <div class="rt-ic"><svg><use href="#i-user"/></svg></div>
+        <div class="rt-info">
+          <strong>유저 취향 상품 추천</strong>
+          <small>유저의 전체 행동을 기반으로 구매 가능성이 높은 상품을 추천해요</small>
+        </div>
+      </div>
+      <div class="rec-type-row" onclick="selectRecType(this)">
+        <div class="rt-ic"><svg><use href="#i-list"/></svg></div>
+        <div class="rt-info">
+          <strong>관심 카테고리 상품 추천</strong>
+          <small>유저가 관심 있는 카테고리의 상품을 추천해요</small>
+        </div>
+      </div>
+      <div class="rec-type-row" onclick="selectRecType(this)">
+        <div class="rt-ic"><svg><use href="#i-bag"/></svg></div>
+        <div class="rt-info">
+          <strong>관심 브랜드 상품 추천</strong>
+          <small>유저가 관심 있는 브랜드의 상품을 추천해요</small>
+        </div>
+      </div>
+      <div class="rec-type-row selected" onclick="selectRecType(this)">
+        <div class="rt-ic"><svg><use href="#i-cart"/></svg></div>
+        <div class="rt-info">
+          <strong>마지막 장바구니 연관 상품 추천</strong>
+          <small>마지막으로 장바구니에 담은 상품과 유사한 상품을 추천해요</small>
+        </div>
+      </div>
+      <div class="rec-type-row" onclick="selectRecType(this)">
+        <div class="rt-ic"><svg><use href="#i-barchart"/></svg></div>
+        <div class="rt-info">
+          <strong>마지막 클릭 연관 상품 추천</strong>
+          <small>마지막으로 클릭한 상품과 유사한 상품을 추천해요</small>
+        </div>
+      </div>
+      <div class="rec-type-row" onclick="selectRecType(this)">
+        <div class="rt-ic"><svg><use href="#i-strategy"/></svg></div>
+        <div class="rt-info">
+          <strong>마지막 구매 연관 상품 추천</strong>
+          <small>마지막으로 구매한 상품과 어울리는 상품을 추천해요</small>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeRecModal()">닫기</button>
+      <button class="btn primary" onclick="closeRecModal(); toast('상품 추천을 설정했어요', '유저별로 자동으로 어울리는 상품이 들어가요')">추가</button>
+    </div>
+  </div>
+</div>
+
+<!-- Coach -->
+<div class="spotlight" id="spotlight">
+  <div class="spotlight-hole" id="spotlight-hole"></div>
+</div>
+<div class="coach" id="coach">
+  <div class="coach-step" id="coach-step"></div>
+  <div class="coach-title" id="coach-title"></div>
+  <div class="coach-body" id="coach-body"></div>
+  <div class="coach-actions">
+    <div class="coach-progress" id="coach-progress"></div>
+    <div class="coach-nav">
+      <button class="coach-btn" onclick="exitTour()">종료</button>
+      <button class="coach-btn" id="coach-prev" onclick="prevStep()">이전</button>
+      <button class="coach-btn primary" id="coach-next" onclick="nextStep()">다음</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =================================================
+   SCENE SWITCH
+   ================================================= */
+const sceneMap = {
+  home: 'scene-home',
+  recipe: 'scene-recipe',
+  analytics: 'scene-analytics',
+  audiences: 'scene-audiences',
+  'audience-create': 'scene-audience-create',
+  campaigns: 'scene-campaigns',
+  'campaign-create': 'scene-campaign-create',
+  scenario: 'scene-scenario'
+};
+function goTo(name) {
+  document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById(sceneMap[name]);
+  if (el) el.classList.add('active');
+  document.querySelectorAll('.nav-item, .nav-subitem').forEach(n => n.classList.remove('active'));
+  const nav = document.querySelector(`[data-scene="${name}"]`);
+  if (nav) nav.classList.add('active');
+  document.getElementById('main').scrollTop = 0;
+}
+document.querySelectorAll('[data-scene]').forEach(n => n.addEventListener('click', () => goTo(n.dataset.scene)));
+
+function toggleNavGroup(id) { document.getElementById(id).classList.toggle('closed'); }
+
+function closeWelcome() { document.getElementById('welcome').style.display = 'none'; }
+
+/* =================================================
+   CHAT PANEL
+   ================================================= */
+function openChatPanel() { document.getElementById('chat-panel').classList.add('open'); }
+function closeChatPanel() { document.getElementById('chat-panel').classList.remove('open'); }
+
+function addMsg(html, role='agent') {
+  const body = document.getElementById('chat-body');
+  const msg = document.createElement('div');
+  msg.className = 'msg ' + role;
+  msg.innerHTML = html;
+  body.appendChild(msg);
+  body.scrollTop = body.scrollHeight;
+  return msg;
+}
+function addThinking() {
+  const body = document.getElementById('chat-body');
+  const msg = document.createElement('div');
+  msg.className = 'msg agent';
+  msg.id = 'thinking-msg';
+  msg.innerHTML = `<div class="thinking-bar">Thinking... <svg><use href="#i-chev-right"/></svg></div>
+    <div class="thinking-dots"><span></span><span></span><span></span></div>`;
+  body.appendChild(msg);
+  body.scrollTop = body.scrollHeight;
+}
+function removeThinking() {
+  const t = document.getElementById('thinking-msg');
+  if (t) t.remove();
+}
+function clearChat() { document.getElementById('chat-body').innerHTML = ''; }
+
+function homeSend() {
+  const input = document.getElementById('home-agent-input');
+  const txt = input.value.trim();
+  if (!txt) return;
+  input.value = '';
+  triggerAgent('custom', txt);
+}
+document.getElementById('home-agent-input').addEventListener('keydown', e => { if (e.key === 'Enter') homeSend(); });
+
+function chatSubSend() {
+  const input = document.getElementById('chat-sub-input');
+  const txt = input.value.trim();
+  if (!txt) return;
+  input.value = '';
+  addMsg(txt, 'user');
+  setTimeout(() => {
+    addThinking();
+    setTimeout(() => {
+      removeThinking();
+      addMsg('추가 요청을 이어서 해봐요. 오디언스, 캠페인, 유저 등 멘션(@)을 함께 쓰면 더 정확히 답해요.');
+    }, 1100);
+  }, 200);
+}
+document.getElementById('chat-sub-input').addEventListener('keydown', e => { if (e.key === 'Enter') chatSubSend(); });
+
+function triggerAgent(type, customText) {
+  openChatPanel();
+  clearChat();
+
+  if (type === 'campaign') {
+    addMsg('재구매 유도에 적합한 오디언스를 뽑아줘', 'user');
+    setTimeout(() => {
+      addMsg(`<div class="thinking-bar">Thinking... <svg><use href="#i-chev-right"/></svg></div>
+        재구매 유도 오디언스를 뽑기 위해 먼저 구매 고객의 재구매 주기 패턴을 확인해볼게요.
+        <div class="status-line"><svg><use href="#i-check"/></svg> 데이터 분석 중...</div>`);
+    }, 500);
+    setTimeout(() => {
+      addMsg(`<div class="thinking-bar">Thinking... <svg><use href="#i-chev-right"/></svg></div>
+        구매 고객 기반 재구매 유도 타깃 세그먼트 분석이 끝났어요. 결과를 시각화해볼게요.
+        <div class="status-line"><svg><use href="#i-check"/></svg> 시각화 생성 중...</div>
+
+        <div style="margin-top: 8px;">
+          <strong>📊 구매 고객 분포 분석</strong><br>
+          <span style="color:var(--grey-500); font-size:12px;">전체 구매 유저 <strong style="color:var(--grey-900);">4,281명</strong>의 최근 구매 경과일 분포예요:</span>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-card-title">최근 구매 경과일별 유저 분포</div>
+          <div class="bar-chart">
+            <div class="bar" style="height: 78%;">1,084</div>
+            <div class="bar" style="height: 60%;">822</div>
+            <div class="bar" style="height: 44%;">609</div>
+            <div class="bar" style="height: 77%;">1,077</div>
+            <div class="bar" style="height: 50%;">689</div>
+          </div>
+          <div class="bar-labels">
+            <div class="bar-label">1.<br>30일<br>이내</div>
+            <div class="bar-label">2.<br>31~60일</div>
+            <div class="bar-label">3.<br>61~90일</div>
+            <div class="bar-label">4.<br>91~180일</div>
+            <div class="bar-label">5.<br>180일<br>초과</div>
+          </div>
+        </div>
+
+        <ul class="insight-list">
+          <li><strong>최근 30일 내 구매</strong>: 1,084명 (아직 재구매 유도 시점 아님)</li>
+          <li><strong>31~180일 구간</strong>: <span class="hl-yellow">2,508명 ⭐ 재구매 유도 최적 타깃</span></li>
+          <li><strong>180일 초과</strong>: 689명 (휴면 복귀 캠페인이 더 적합)</li>
+        </ul>
+
+        <div style="margin-top:10px; font-size:13px;">
+          <strong>💡 재구매 유도 오디언스 제안</strong><br>
+          "이전에 구매 이력이 있으나 최근 30일간 재구매가 없는 유저"를 타깃으로 제안해요. 이 구간은 구매 경험이 남아 있어 재구매 전환율이 가장 높아요.
+        </div>
+
+        <div style="margin-top: 10px; color: var(--grey-500); font-size: 12px;">확인해주면 오디언스를 만들고 재구매 유도 캠페인 초안까지 이어서 준비할게요.</div>
+
+        <div style="font-weight: 600; margin-top: 14px; margin-bottom: 6px; font-size: 13px;">다른 기준으로 만들어볼까요?</div>
+        <div class="suggestion-chips">
+          <button class="chip" onclick="agentStep2()">↪ 제안 그대로 만들기</button>
+          <button class="chip">↪ 60일 미구매로 더 보수적으로</button>
+          <button class="chip">↪ VIP 티어만 타깃</button>
+          <button class="chip">↪ 휴면 복귀(180일 초과)로 변경</button>
+        </div>
+      `);
+    }, 2400);
+  }
+  else if (type === 'report') {
+    addMsg('지난 30일간 주기성 캠페인 성과를 정리해줘', 'user');
+    setTimeout(() => addThinking(), 400);
+    setTimeout(() => {
+      removeThinking();
+      addMsg(`<div class="thinking-bar">Thinking... <svg><use href="#i-chev-right"/></svg></div>
+        <div class="status-line"><svg><use href="#i-check"/></svg> 캠페인 데이터 집계 중...</div>
+
+        <strong>📊 지난 30일 주기성 캠페인 요약</strong><br>
+        <span style="font-size:13px;">총 발송 <strong>1.24M건</strong> · 오픈율 <strong>38.2%</strong> (↑2.1%p) · 전환율 <strong>4.7%</strong> (↑0.8%p)</span>
+
+        <div class="chart-card">
+          <div class="chart-card-title">캠페인별 전환율</div>
+          <div class="bar-chart">
+            <div class="bar" style="height: 94%;">12.4%</div>
+            <div class="bar" style="height: 48%;">6.2%</div>
+            <div class="bar" style="height: 42%;">5.4%</div>
+            <div class="bar" style="height: 30%;">3.9%</div>
+            <div class="bar" style="height: 22%;">2.8%</div>
+          </div>
+          <div class="bar-labels">
+            <div class="bar-label">장바구니<br>리마인드</div>
+            <div class="bar-label">이탈<br>재참여</div>
+            <div class="bar-label">브랜드<br>추천</div>
+            <div class="bar-label">뷰티<br>신상</div>
+            <div class="bar-label">가입<br>축하</div>
+          </div>
+        </div>
+
+        <ul class="insight-list">
+          <li>📈 <strong>TOP</strong>: 장바구니 리마인드 시나리오 (전환율 12.4%)</li>
+          <li>📉 <strong>부진</strong>: 가입 축하 쿠폰 (전환율 2.8%)</li>
+          <li>💡 <span class="hl-yellow">시나리오 기반 자동 캠페인이 일괄 캠페인보다 3.2배 높은 전환</span>을 보여요.</li>
+        </ul>
+
+        <div style="margin-top:14px; font-size:13px;"><strong>다음 주 제안</strong></div>
+        <ul class="insight-list">
+          <li>부진한 일괄 캠페인을 시나리오로 전환</li>
+          <li>충성 유저 AI 오디언스에 한정판 얼리 액세스 테스트</li>
+          <li>구매 후 7일 경과 유저에 재구매 유도 A/B 테스트</li>
+        </ul>
+
+        <div class="suggestion-chips" style="margin-top:14px;">
+          <button class="chip">↪ 리포트 PDF로 내보내기</button>
+          <button class="chip">↪ Slack으로 공유</button>
+          <button class="chip">↪ 제안 1번 바로 실행</button>
+        </div>
+      `);
+    }, 1600);
+  }
+  else if (type === 'strategy') {
+    addMsg('첫 구매 유저 대상 재구매 유도 전략을 세워줘', 'user');
+    setTimeout(() => addThinking(), 400);
+    setTimeout(() => {
+      removeThinking();
+      addMsg(`<strong>📋 첫 구매 후 재구매 패턴 분석</strong>
+        <ul class="insight-list">
+          <li>첫 구매 <strong>14일 이내</strong> 재구매한 유저: 전체의 <strong>22%</strong></li>
+          <li>14일 지나면 재구매율 <span class="hl-yellow">급락 (5% 미만)</span></li>
+        </ul>
+
+        <div style="margin-top:14px;"><strong>💡 3단계 시나리오 제안</strong></div>
+        <div style="background:var(--bg-greyblue); padding:14px; border-radius:8px; margin-top:8px; font-size:13px; line-height:1.8;">
+          → 첫 구매 <strong>+7일</strong>: 구매 상품 연관 추천 (카카오톡)<br>
+          → 첫 구매 <strong>+12일</strong>: 한정 쿠폰 + 취향 추천 (앱푸시)<br>
+          → 첫 구매 <strong>+20일</strong>: 윈백 메시지 (이메일)
+        </div>
+
+        <div class="suggestion-chips" style="margin-top:14px;">
+          <button class="chip">↪ 이 시나리오 바로 만들기</button>
+          <button class="chip">↪ 각 단계 메시지 초안 작성</button>
+        </div>
+      `);
+    }, 1400);
+  }
+  else if (type === 'analysis') {
+    addMsg('시간대/요일 별 이벤트 발생 분포를 분석해줘', 'user');
+    setTimeout(() => addThinking(), 400);
+    setTimeout(() => {
+      removeThinking();
+      addMsg(`<strong>📊 이벤트 발생 시간대 분석</strong>
+        <div class="chart-card" style="margin-top:10px;">
+          <div class="chart-card-title">요일별 구매 이벤트 분포</div>
+          <div class="bar-chart">
+            <div class="bar" style="height: 55%;"></div>
+            <div class="bar" style="height: 62%;"></div>
+            <div class="bar" style="height: 70%;"></div>
+            <div class="bar" style="height: 80%;"></div>
+            <div class="bar" style="height: 94%;"></div>
+            <div class="bar" style="height: 88%;"></div>
+            <div class="bar" style="height: 72%;"></div>
+          </div>
+          <div class="bar-labels">
+            <div class="bar-label">월</div><div class="bar-label">화</div><div class="bar-label">수</div>
+            <div class="bar-label">목</div><div class="bar-label">금</div><div class="bar-label">토</div><div class="bar-label">일</div>
+          </div>
+        </div>
+        <ul class="insight-list">
+          <li>🏆 <strong>피크</strong>: 금요일 <span class="hl-yellow">저녁 7~9시 (전체의 18%)</span></li>
+          <li>📉 <strong>저조</strong>: 월요일 오전 구매량 최저</li>
+          <li>💡 캠페인 발송은 <strong>목요일 오후 6시</strong>가 전환율 최적</li>
+        </ul>
+      `);
+    }, 1300);
+  }
+  else if (type === 'custom') {
+    addMsg(customText, 'user');
+    setTimeout(() => addThinking(), 400);
+    setTimeout(() => {
+      removeThinking();
+      addMsg('요청을 좀 더 구체화해봐요. 오디언스, 캠페인, 유저 중 어떤 걸 분석할지 멘션(@)으로 지정하면 더 정확한 답을 줄 수 있어요.<br><br>💡 아래 예시 프롬프트를 눌러봐도 좋아요.');
+    }, 1200);
+  }
+}
+
+function agentStep2() {
+  addMsg('제안 그대로 만들기', 'user');
+  setTimeout(() => addThinking(), 300);
+  setTimeout(() => {
+    removeThinking();
+    addMsg(`<div class="thinking-bar">Thinking... <svg><use href="#i-chev-right"/></svg></div>
+      <div class="status-line"><svg><use href="#i-check"/></svg> 룰 세그먼트 생성 중...</div>
+
+      <strong>오디언스를 만들었어요.</strong>
+
+      <div class="result-card">
+        <div class="result-row"><div class="k">오디언스명</div><div class="v">재구매 유도 타깃 (최근 30일 미구매)</div></div>
+        <div class="result-row"><div class="k">유형</div><div class="v">규칙 기반</div></div>
+        <div style="text-align:right; margin-top:10px;">
+          <button class="btn sm" onclick="goTo('audiences'); toast('오디언스 목록으로 이동했어요')">오디언스 보기</button>
+        </div>
+      </div>
+
+      <div style="font-size:13px;">이 오디언스로 재구매 유도 캠페인을 바로 이어서 만들어볼까요?</div>
+
+      <div style="font-weight: 600; margin-top: 14px; margin-bottom: 6px; font-size: 13px;">다음 단계를 골라봐요</div>
+      <div class="suggestion-chips">
+        <button class="chip" onclick="agentStep3()">↪ 카카오 브랜드메시지 캠페인 만들기</button>
+        <button class="chip">↪ 앱 푸시 캠페인 만들기</button>
+        <button class="chip">↪ SMS 캠페인 만들기</button>
+        <button class="chip">↪ 이번엔 여기까지</button>
+      </div>
+    `);
+  }, 1400);
+}
+
+function agentStep3() {
+  addMsg('카카오 브랜드메시지 캠페인 만들기', 'user');
+  setTimeout(() => addThinking(), 300);
+  setTimeout(() => {
+    removeThinking();
+    addMsg(`<div class="thinking-bar">Thinking... <svg><use href="#i-chev-right"/></svg></div>
+      <div class="status-line"><svg><use href="#i-check"/></svg> 캠페인 생성 중...</div>
+
+      재구매 유도에 어울리는 카카오 브랜드메시지 초안을 준비했어요. 최근 구매 상품을 자연스럽게 리마인드하면서 재구매를 유도하는 톤으로 써봤어요.
+
+      <div class="result-card">
+        <div class="result-card-head">캠페인 정보</div>
+        <div class="result-row"><div class="k">캠페인명</div><div class="v">재구매 유도 브랜드메시지</div></div>
+        <div class="result-row"><div class="k">발송 대상</div><div class="v">재구매 유도 타깃 (최근 30일 미구매)</div></div>
+        <div class="result-row"><div class="k">채널</div><div class="v">카카오 브랜드 메시지</div></div>
+        <div class="result-row"><div class="k">발송 시점</div><div class="v">일회성 · 활성화 즉시</div></div>
+        <div class="result-row"><div class="k">전환 측정</div><div class="v">order · 1일 이내</div></div>
+        <div class="result-row"><div class="k">태그</div><div class="v">재구매, 프로모션</div></div>
+      </div>
+
+      <div class="result-card">
+        <div class="result-card-head">메시지</div>
+        <div style="font-size: 12px; color:var(--grey-500); margin-bottom:6px;">본문</div>
+        <div style="font-size:12px; line-height:1.7; color:var(--grey-700);">
+          (광고) 블럭스<br><br>
+          {{ name | default: '고객' }}님, 오랜만이에요!<br>
+          지난번 구매하신 '{{ latest_purchase_item.name | default: '상품' }}'은 잘 쓰고 계신가요? {{ name | default: '고객' }}님만을 위한 특별 혜택을 준비했어요. 지금 바로 확인하고 다시 쇼핑의 즐거움을 느껴봐요 🎁
+        </div>
+      </div>
+
+      <div style="margin-top:10px; color: var(--grey-500); font-size: 12px;">웹 콘솔에서 메시지 미리보기, 버튼/쿠폰 추가, 발송 일정을 최종 확인한 뒤 활성화해봐요.</div>
+
+      <div class="suggestion-chips" style="margin-top:14px;">
+        <button class="chip" onclick="goTo('campaign-create'); toast('캠페인 편집 화면으로 이동했어요')">↪ 캠페인 열기</button>
+        <button class="chip">↪ A/B 테스트 추가</button>
+        <button class="chip">↪ 쿠폰 연결</button>
+      </div>
+    `);
+  }, 1700);
+}
+
+/* =================================================
+   TOURS
+   ================================================= */
+const tours = {
+  'agent-campaign': {
+    steps: [
+      { scene: 'home', target: '.suggested-prompts', title: 'AI 에이전트에게 자연어로 요청', body: '"재구매 유도에 적합한 오디언스를 뽑아줘" 같은 자연어 한 문장으로 충분해요. 예시 프롬프트를 눌러봐요.', pos: 'right', action: () => triggerAgent('campaign') },
+      { scene: 'home', target: '#chat-panel', title: '실시간 분석과 시각화', body: '에이전트가 데이터를 분석하고 차트까지 자동으로 그려줘요. 숫자 뒤에 근거가 있는 제안을 확인해봐요.', pos: 'left', waitMs: 2800 },
+      { scene: 'home', target: '#chat-panel', title: '원클릭으로 바로 실행', body: '제안을 그대로 받거나 기준을 바꿔 다시 요청할 수 있어요. 에이전트는 후속 대화를 이어서 끌어가요.', pos: 'left' },
+      { scene: 'home', target: '#chat-panel', title: '오디언스 → 캠페인 한 흐름', body: '오디언스 생성 → 캠페인 초안 → 발송까지 하나의 대화로 이어져요. 마케터의 반복 작업을 줄여줘요.', pos: 'left' }
+    ]
+  },
+  'agent-report': {
+    steps: [
+      { scene: 'home', target: '.suggested-prompts', title: '리포트 자동 생성', body: '"지난 30일 성과 정리해줘" 한 줄로 주간 리포트가 바로 만들어져요.', pos: 'right', action: () => triggerAgent('report') },
+      { scene: 'home', target: '#chat-panel', title: '핵심 지표 + 차트', body: '발송/오픈/전환/매출 KPI와 함께 TOP/부진 캠페인을 자동으로 분류해요.', pos: 'left', waitMs: 2300 },
+      { scene: 'home', target: '#chat-panel', title: '다음 액션까지 제안', body: '결과만 보여주는 게 아니라 다음 주 액션 아이템까지 뽑아줘요. Slack 공유·PDF 내보내기도 원클릭이에요.', pos: 'left' }
+    ]
+  },
+  'manual-campaign': {
+    steps: [
+      { scene: 'campaign-create', target: '#field-audience', title: '오디언스 선택', body: 'AI 오디언스, 룰 세그먼트, 커스텀 세그먼트 중 원하는 방식으로 타겟을 골라요.', pos: 'right' },
+      { scene: 'campaign-create', target: '#ai-optimize', title: 'AI 발송 대상 최적화', body: '체크 한 번으로 구매 가능성이 낮은 유저를 자동 제외해 ROAS를 높여줘요.', pos: 'right' },
+      { scene: 'campaign-create', target: '#field-message .chip-group', title: '7개 채널 지원', body: '카카오 브랜드메시지·알림톡·문자·RCS·앱 푸시·이메일·웹훅을 자유롭게 선택해요.', pos: 'right' },
+      { scene: 'campaign-create', target: '#field-message .msg-editor', title: '개인화 변수', body: '{{name}}, {{latest_purchase_item.name}} 같은 변수를 넣으면 유저별로 다른 메시지가 발송돼요.', pos: 'left' },
+      { scene: 'campaign-create', target: '#field-preview', title: '실시간 미리보기', body: '작성하는 즉시 실제 디바이스에서 어떻게 보이는지 확인해요. 테스트 발송도 한 번에 돼요.', pos: 'left' }
+    ]
+  },
+  'personalization': {
+    steps: [
+      { scene: 'audience-create', target: '#panel-ai-predict', title: '4가지 AI 예측 유형', body: '구매 유도, 방문 유도, 브랜드 홍보, 카테고리 홍보 — 목적에 맞는 AI 예측 기준을 선택해요.', pos: 'right' },
+      { scene: 'audience-create', target: '#panel-ai-result', title: '범위 드래그로 구간 선택', body: 'AI가 예측한 행동 가능성 점수 분포에서 원하는 구간만 드래그해요. 구간 내 유저 수와 평균 행동이 실시간으로 계산돼요.', pos: 'left' },
+      { scene: 'campaign-create', target: '#field-message', title: '메시지에 상품 추천 연결', body: '상품 추천 설정을 연결하면 각 유저에게 서로 다른 상품이 자동으로 들어가요.', pos: 'left', action: () => setTimeout(openRecModal, 300) },
+      { scene: 'campaign-create', target: '#rec-modal .modal', title: '6가지 추천 알고리즘', body: '유저 취향, 관심 카테고리·브랜드, 장바구니·클릭·구매 연관 — 캠페인 목적에 맞게 골라요.', pos: 'left', waitMs: 500 }
+    ]
+  },
+  'scenario': {
+    steps: [
+      { scene: 'scenario', target: '#sc-start', title: '시작: 유저 행동을 트리거로', body: '장바구니 담기, 주문, 가입 등 이벤트가 발생하면 시나리오가 자동으로 시작돼요.', pos: 'right' },
+      { scene: 'scenario', target: '#sc-delay', title: '딜레이', body: '이벤트 후 원하는 시간만큼 대기해요. 1분, 1시간, 3일, 7일 자유롭게 설정할 수 있어요.', pos: 'right' },
+      { scene: 'scenario', target: '#sc-branch', title: '분기', body: '구매 여부, 오픈 여부에 따라 Yes/No로 플로우가 갈라져요. 전환한 유저와 미전환 유저를 따로 관리해요.', pos: 'right' },
+      { scene: 'scenario', target: '#sc-message', title: '메시지', body: '각 분기마다 다른 메시지를 설정해요. AI 상품 추천까지 연결하면 진짜 자동화가 완성돼요.', pos: 'left' },
+      { scene: 'scenario', target: '#scenario-activate', title: '한 번 설정하면 계속 돌아가요', body: '활성화하면 유저가 조건에 들어올 때마다 자동으로 실행돼요. 매일 발송을 돌릴 필요가 없어요.', pos: 'left' }
+    ]
+  }
+};
+
+let currentTour = null;
+let currentStep = 0;
+
+function startTour(key) {
+  closeWelcome();
+  currentTour = tours[key];
+  if (!currentTour) return;
+  currentStep = 0;
+  document.querySelectorAll('.tour-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.querySelector(`.tour-btn[data-tour="${key}"]`);
+  if (btn) btn.classList.add('active');
+  showStep();
+}
+document.querySelectorAll('.tour-btn[data-tour]').forEach(b => b.addEventListener('click', () => startTour(b.dataset.tour)));
+
+function showStep() {
+  if (!currentTour) return;
+  const step = currentTour.steps[currentStep];
+  if (!step) return exitTour();
+
+  goTo(step.scene);
+  if (step.action) step.action();
+
+  setTimeout(() => {
+    const target = document.querySelector(step.target);
+    const coach = document.getElementById('coach');
+    const spot = document.getElementById('spotlight');
+    const hole = document.getElementById('spotlight-hole');
+
+    if (target) {
+      const rect = target.getBoundingClientRect();
+      spot.classList.add('visible');
+      hole.style.left = (rect.left - 6) + 'px';
+      hole.style.top = (rect.top - 6) + 'px';
+      hole.style.width = (rect.width + 12) + 'px';
+      hole.style.height = (rect.height + 12) + 'px';
+
+      coach.style.display = 'block';
+      const coachW = 320;
+      const coachH = coach.offsetHeight || 180;
+      let cx, cy;
+      const pos = step.pos || 'right';
+      if (pos === 'right') {
+        cx = rect.right + 16;
+        cy = Math.max(70, rect.top);
+        if (cx + coachW > window.innerWidth - 16) cx = rect.left - coachW - 16;
+      } else if (pos === 'left') {
+        cx = rect.left - coachW - 16;
+        cy = Math.max(70, rect.top);
+        if (cx < 16) cx = rect.right + 16;
+      }
+      if (cy + coachH > window.innerHeight - 16) cy = window.innerHeight - coachH - 16;
+      coach.style.left = cx + 'px';
+      coach.style.top = cy + 'px';
+    } else {
+      coach.style.display = 'none';
+      spot.classList.remove('visible');
+    }
+
+    document.getElementById('coach-step').textContent = `STEP ${currentStep + 1} / ${currentTour.steps.length}`;
+    document.getElementById('coach-title').textContent = step.title;
+    document.getElementById('coach-body').textContent = step.body;
+    document.getElementById('coach-progress').textContent = `${currentStep + 1} / ${currentTour.steps.length}`;
+    document.getElementById('coach-prev').style.visibility = currentStep === 0 ? 'hidden' : 'visible';
+    document.getElementById('coach-next').textContent = currentStep === currentTour.steps.length - 1 ? '완료' : '다음';
+  }, step.waitMs || 320);
+}
+function nextStep() {
+  currentStep++;
+  if (currentStep >= currentTour.steps.length) return exitTour();
+  showStep();
+}
+function prevStep() { if (currentStep > 0) { currentStep--; showStep(); } }
+function exitTour() {
+  currentTour = null;
+  currentStep = 0;
+  document.getElementById('coach').style.display = 'none';
+  document.getElementById('spotlight').classList.remove('visible');
+  document.querySelectorAll('.tour-btn').forEach(b => b.classList.remove('active'));
+  toast('투어를 마쳤어요', '자유롭게 둘러봐요');
+}
+
+/* Chip selectors */
+document.querySelectorAll('.chip-group').forEach(group => {
+  group.querySelectorAll('.chip-btn').forEach(c => {
+    c.addEventListener('click', () => {
+      group.querySelectorAll('.chip-btn').forEach(x => x.classList.remove('selected'));
+      c.classList.add('selected');
+    });
+  });
+});
+
+/* AI optimize checkbox */
+document.getElementById('ai-check').addEventListener('click', e => {
+  const el = e.currentTarget;
+  el.classList.toggle('on');
+  if (el.classList.contains('on')) {
+    el.innerHTML = '<svg><use href="#i-check"/></svg>';
+  } else {
+    el.innerHTML = '';
+  }
+});
+
+/* Rec modal */
+function openRecModal() { document.getElementById('rec-modal').classList.add('open'); }
+function closeRecModal() { document.getElementById('rec-modal').classList.remove('open'); }
+function selectRecType(el) {
+  document.querySelectorAll('.rec-type-row').forEach(r => r.classList.remove('selected'));
+  el.classList.add('selected');
+}
+document.getElementById('rec-modal').addEventListener('click', e => {
+  if (e.target.id === 'rec-modal') closeRecModal();
+});
+
+/* Toast (Blux writing: title + optional desc) */
+function toast(title, desc) {
+  const existing = document.querySelector('.toast');
+  if (existing) existing.remove();
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.innerHTML = `<strong>${title}</strong>${desc ? `<small>${desc}</small>` : ''}`;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3200);
+}
+
+/* Keyboard navigation */
+document.addEventListener('keydown', e => {
+  if (document.getElementById('coach').style.display === 'block') {
+    if (e.key === 'ArrowRight' || e.key === 'Enter') nextStep();
+    if (e.key === 'ArrowLeft') prevStep();
+    if (e.key === 'Escape') exitTour();
+  }
+  if (e.key === 'Escape' && document.getElementById('rec-modal').classList.contains('open')) closeRecModal();
+});
+</script>
+</body>
+</html>
