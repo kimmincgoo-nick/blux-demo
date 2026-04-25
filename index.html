@@ -3041,8 +3041,8 @@ function triggerAgent(type, customText) {
       removeThinking();
       addMsg(`<div style="font-weight: 600; margin-bottom: 6px; font-size: 13px;">바로 공유하거나 실행할까요?</div>
         <div class="suggestion-chips">
-          <button class="chip chip-primary" id="share-report-btn" onclick="shareReport()">↪ Slack으로 공유</button>
-          <button class="chip">↪ 리포트 PDF로 내보내기</button>
+          <button class="chip chip-primary" id="download-report-btn" onclick="downloadReport()">↪ PDF로 리포트 파일 받기</button>
+          <button class="chip">↪ Slack으로 공유</button>
           <button class="chip">↪ 제안 1번 바로 실행</button>
         </div>`);
     }, 8800);
@@ -3304,9 +3304,9 @@ function activateCampaign() {
   }
 }
 
-function shareReport() {
+function downloadReport() {
   clearTourSpotlight();
-  showToast('📤 #marketing 채널에 리포트가 공유되었습니다');
+  showToast('📥 리포트 PDF가 \'다운로드\' 폴더에 저장되었습니다');
   if (currentTour === tours['agent-report']) {
     setTimeout(completeAgentReportTour, 600);
   }
@@ -3327,6 +3327,31 @@ function activateScenario() {
   if (currentTour === tours['scenario']) {
     setTimeout(completeScenarioTour, 600);
   }
+}
+
+// Restore the coach element to its default structure (with #coach-step/#coach-title/etc).
+// showCelebrationCoach replaces coach.innerHTML for the completion screen, which destroys
+// those IDs — so any subsequent showStep would crash on textContent assignment if we don't
+// rebuild the structure when starting/ending a tour.
+function resetCoachContent() {
+  const coach = document.getElementById('coach');
+  if (!coach) return;
+  coach.innerHTML = `
+    <div class="coach-step" id="coach-step">STEP 1 / 5</div>
+    <div class="coach-title" id="coach-title"></div>
+    <div class="coach-body" id="coach-body"></div>
+    <div class="coach-actions">
+      <div class="coach-progress" id="coach-progress"></div>
+      <div class="coach-nav">
+        <button class="coach-btn" onclick="exitTour()">종료</button>
+      </div>
+    </div>
+  `;
+  coach.classList.remove('right', 'bottom');
+  coach.style.display = 'none';
+  coach.style.left = '';
+  coach.style.top = '';
+  coach.style.width = '';
 }
 
 function showCelebrationCoach({icon, title, body}) {
@@ -3458,10 +3483,10 @@ const tours = {
       },
       {
         scene: 'home',
-        target: '#share-report-btn',
-        emphasize: '#share-report-btn',
-        title: 'Next Action 한 번에 공유',
-        body: 'KPI · 차트 · TOP/부진 · 다음 주 제안까지 자동 생성. "↪ Slack으로 공유"를 누르면 팀에 즉시 공유돼요.',
+        target: '#download-report-btn',
+        emphasize: '#download-report-btn',
+        title: 'PDF 리포트 한 번에 받기',
+        body: 'KPI · 차트 · TOP/부진 · 다음 주 제안까지 자동 생성. "↪ PDF로 리포트 파일 받기"를 누르면 다운로드 폴더에 저장돼요.',
         position: 'left',
         waitMs: 300
       }
@@ -3611,6 +3636,10 @@ function startTour(tourKey) {
 
   // Tour gating: lock all chat/nav buttons; only the current step target is clickable.
   document.body.classList.add('tour-active');
+
+  // Restore default coach structure in case the previous tour ended with a celebration
+  // coach (which had replaced innerHTML and would crash subsequent showStep calls).
+  resetCoachContent();
 
   // Clean leftover artifacts from any previous tour run
   document.querySelectorAll('[data-tour-target]').forEach(el => el.removeAttribute('data-tour-target'));
@@ -3785,7 +3814,6 @@ function exitTour() {
   currentTour = null;
   currentStep = 0;
   repositionActive = null;
-  document.getElementById('coach').style.display = 'none';
   document.getElementById('spotlight').classList.remove('visible');
   document.querySelectorAll('.tour-btn').forEach(b => b.classList.remove('active'));
   document.querySelector('.suggested-prompts')?.classList.remove('tour-lock');
@@ -3794,6 +3822,8 @@ function exitTour() {
   });
   document.querySelectorAll('[data-tour-target]').forEach(el => el.removeAttribute('data-tour-target'));
   document.body.classList.remove('tour-active');
+  // Rebuild default coach structure (in case it had been replaced by a celebration coach)
+  resetCoachContent();
   showToast('투어 완료 · 자유롭게 탐색해보세요');
 }
 
